@@ -102,16 +102,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -121,22 +112,12 @@
             </plugin>
         </plugins>
     </build>
-    <licenses>
-        <license>
-            <name>Apache License</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <developers>
-        <developer>
-            <id>apache9</id>
-            <name>Apache9</name>
-            <email>palomino219@gmail.com</email>
-            <roles>
-                <role>developer</role>
-            </roles>
-            <timezone>+8</timezone>
-        </developer>
-    </developers>
+    <repositories>
+        <repository>
+            <id>mobike</id>
+            <name>Mobike Maven Repository</name>
+            <url>http://repo.mobike.io/maven</url>
+        </repository>
+    </repositories>
+
 </project>

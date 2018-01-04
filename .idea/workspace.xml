@@ -2,346 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0db91867-66b1-4368-aeef-05b00a8c3af0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.1149629267.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.1149629267.tmp/bench.sh.555318820.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.1327157661.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.1327157661.tmp/bench.sh.423942239.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.2138280301.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.2138280301.tmp/bench.sh.1216978980.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.466288225.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.466288225.tmp/bench.sh.1602292243.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.509157505.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.509157505.tmp/bench.sh.431738759.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.533109280.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.533109280.tmp/bench.sh.680179157.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.651516589.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.651516589.tmp/bench.sh.1638291881.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.71220550.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.71220550.tmp/bench.sh.6074452.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.71681509.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.71681509.tmp/bench.sh.2012217682.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.940206800.tmp/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/archive-tmp/fileSetFormatter.940206800.tmp/bench.sh.1608184613.filtered" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/maven-archiver/pom.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench-0.2.0-SNAPSHOT.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench.tar.gz" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/bin/bench.sh" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/args4j-2.32.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/commons-lang3-3.4.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/commons-pool2-2.3.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/guava-18.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/jedis-2.7.3.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/nedis-bench-0.2.0-SNAPSHOT.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/nedis-client-0.2.0-SNAPSHOT.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-buffer-4.0.35.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-buffer-4.1.16.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-codec-4.0.35.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-codec-4.1.16.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-common-4.0.35.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-common-4.1.16.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-handler-4.0.35.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-handler-4.1.16.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-resolver-4.1.16.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-transport-4.0.35.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-bench/target/nedis-bench/nedis-bench/lib/netty-transport-4.1.16.Final.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/allclasses-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/allclasses-noframe.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/constant-values.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/deprecated-list.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/help-doc.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/index-all.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/AsyncCloseable.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/ConnectionManagement.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/NedisClient.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/NedisClientBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/NedisClientImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/NedisClientPool.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/NedisClientPoolBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/NedisClientPoolImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/AsyncCloseable.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/ConnectionManagement.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/NedisClient.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/NedisClientBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/NedisClientImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/NedisClientPool.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/NedisClientPoolBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/class-use/NedisClientPoolImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/RedisResponseException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/TxnAbortException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/TxnDiscardException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/class-use/RedisResponseException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/class-use/TxnAbortException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/class-use/TxnDiscardException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/exception/package-use.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/RedisDuplexHandler.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/RedisRequest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/RedisRequestEncoder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/RedisResponseDecoder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/TxnRedisRequest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/class-use/RedisDuplexHandler.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/class-use/RedisRequest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/class-use/RedisRequestEncoder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/class-use/RedisResponseDecoder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/class-use/TxnRedisRequest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/handler/package-use.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/package-use.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/Aggregate.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/BitOp.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/BlockingListsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ConnectionCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/HashEntry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/HashesCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/HyperLogLogCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/KeysCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ListsCommands.LIST_POSITION.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ListsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/RedisCommand.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/RedisKeyword.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ScanParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ScanResult.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ScriptingCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ServerCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/SetParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/SetsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/SortParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/SortedSetEntry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/SortedSetsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/StringsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/TransactionsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/ZSetOpParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/Aggregate.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/BitOp.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/BlockingListsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ConnectionCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/HashEntry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/HashesCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/HyperLogLogCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/KeysCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ListsCommands.LIST_POSITION.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ListsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/RedisCommand.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/RedisKeyword.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ScanParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ScanResult.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ScriptingCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ServerCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/SetParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/SetsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/SortParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/SortedSetEntry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/SortedSetsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/StringsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/TransactionsCommands.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/class-use/ZSetOpParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/protocol/package-use.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/AbstractNedisBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/NedisClientHashSet.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/NedisUtils.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/class-use/AbstractNedisBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/class-use/NedisClientHashSet.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/class-use/NedisUtils.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/package-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/package-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/package-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/io/codis/nedis/util/package-use.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/overview-frame.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/overview-summary.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/overview-tree.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/package-list" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/script.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/serialized-form.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/apidocs/stylesheet.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/jacoco.exec" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/javadoc-bundle-options/javadoc-options-javadoc-resources.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/javadoc-bundle-options/package-list" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/maven-archiver/pom.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/nedis-client-0.2.0-SNAPSHOT-javadoc.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/nedis-client-0.2.0-SNAPSHOT-sources.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/nedis-client-0.2.0-SNAPSHOT-test-sources.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/nedis-client-0.2.0-SNAPSHOT-tests.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/nedis-client-0.2.0-SNAPSHOT.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/branchfc.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/branchnc.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/branchpc.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/bundle.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/class.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/down.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/greenbar.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/group.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/method.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/package.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/prettify.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/prettify.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/redbar.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/report.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/report.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/session.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/sort.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/sort.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/source.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.resources/up.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/.sessions.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/RedisResponseException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/RedisResponseException.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/TxnAbortException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/TxnAbortException.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/TxnDiscardException.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/TxnDiscardException.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.exception/index.source.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisDuplexHandler$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisDuplexHandler$Entry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisDuplexHandler$TimeoutTask.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisDuplexHandler.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisDuplexHandler.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisRequest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisRequest.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisRequestEncoder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisRequestEncoder.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisResponseDecoder$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisResponseDecoder$2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisResponseDecoder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/RedisResponseDecoder.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/TxnRedisRequest.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/TxnRedisRequest.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.handler/index.source.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/Aggregate.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/Aggregate.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/BitOp.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/BitOp.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/HashEntry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/HashEntry.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ListsCommands$LIST_POSITION.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ListsCommands.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/RedisCommand.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/RedisCommand.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/RedisKeyword.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/RedisKeyword.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ScanParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ScanParams.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ScanResult.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ScanResult.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/SetParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/SetParams.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/SortParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/SortParams.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/SortedSetEntry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/SortedSetEntry.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ZSetOpParams.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/ZSetOpParams.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.protocol/index.source.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/AbstractNedisBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/AbstractNedisBuilder.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisClientHashSet$Entry.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisClientHashSet.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisClientHashSet.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$Invoker$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$Invoker$2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$Invoker$3.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$Invoker$4.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$Invoker$5.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils$Invoker.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/NedisUtils.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis.util/index.source.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientBuilder$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientBuilder$2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientBuilder.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientImpl$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientImpl.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolBuilder.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolBuilder.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl$2$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl$2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl$3.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl$InitializeFutureListener.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl$State.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/NedisClientPoolImpl.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$1$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$10$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$10.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$11$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$11.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$12$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$12.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$13$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$13.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$14$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$14.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$15$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$15.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$16$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$16.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$2$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$2.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$3$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$3.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$4$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$4.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$5$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$5.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$6$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$6.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$7$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$7.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$8$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$8.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$9$1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter$9.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/PromiseConverter.java.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/index.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/io.codis.nedis/index.source.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/jacoco.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/site/jacoco/jacoco.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/TEST-io.codis.nedis.SimpleTest.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/TEST-io.codis.nedis.TestCommands.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/TEST-io.codis.nedis.TestNedis.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/TEST-io.codis.nedis.TestNedisClientImpl.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/TEST-io.codis.nedis.util.TestNedisClientHashSet.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.SimpleTest-output.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.SimpleTest.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.TestCommands.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.TestNedis-output.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.TestNedis.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.TestNedisClientImpl.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/surefire-reports/io.codis.nedis.util.TestNedisClientHashSet.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/RedisServer.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/SimpleTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestCommands$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestCommands$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestCommands.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestNedis.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestNedisClientImpl$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestNedisClientImpl$FindEnumVisitor.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestNedisClientImpl.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/TestUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nedis-client/target/test-classes/io/codis/nedis/util/TestNedisClientHashSet.class" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nedis-bench/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/nedis-bench/pom.xml.releaseBackup" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nedis-client/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/nedis-client/pom.xml.releaseBackup" />
@@ -405,8 +65,8 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1800">
-              <caret line="120" column="21" lean-forward="false" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
+            <state relative-caret-position="473">
+              <caret line="120" column="19" lean-forward="false" selection-start-line="120" selection-start-column="19" selection-end-line="120" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -753,7 +413,7 @@
       <updated>1515034735576</updated>
       <workItem from="1515034737087" duration="6529000" />
       <workItem from="1515063271213" duration="1874000" />
-      <workItem from="1515065925885" duration="5506000" />
+      <workItem from="1515065925885" duration="5705000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1515068909194</created>
@@ -825,7 +485,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515071075752</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="init">
+      <created>1515071869803</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1515071869803</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -861,7 +528,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13909000" />
+    <option name="totallyTimeSpent" value="14108000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -1234,8 +901,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1800">
-          <caret line="120" column="21" lean-forward="false" selection-start-line="120" selection-start-column="21" selection-end-line="120" selection-end-column="21" />
+        <state relative-caret-position="473">
+          <caret line="120" column="19" lean-forward="false" selection-start-line="120" selection-start-column="19" selection-end-line="120" selection-end-column="19" />
           <folding />
         </state>
       </provider>
