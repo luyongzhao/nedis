@@ -3,11 +3,11 @@
     <parent>
         <artifactId>nedis</artifactId>
         <groupId>io.codis.nedis</groupId>
-        <version>0.2.2-SNAPSHOT</version>
+        <version>0.2.3-SNAPSHOT</version>
     </parent>
     <groupId>io.codis.nedis</groupId>
     <artifactId>nedis-bench</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.2.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <app.encoding>UTF-8</app.encoding>
