@@ -2,12 +2,35 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0db91867-66b1-4368-aeef-05b00a8c3af0" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/nedis-0.2.0-SNAPSHOT.pom" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_8_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_8_9.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_7_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_client_2_11_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_framework_2_11_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_curator_curator_recipes_2_9_1.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_12.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_simple_1_7_12.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/classes/io/codis/nedis/codis/RoundRobinNedisClientPool$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/classes/io/codis/nedis/codis/RoundRobinNedisClientPool$2$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/classes/io/codis/nedis/codis/RoundRobinNedisClientPool$2.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/classes/io/codis/nedis/codis/RoundRobinNedisClientPool$Builder.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/classes/io/codis/nedis/codis/RoundRobinNedisClientPool$PooledObject.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/classes/io/codis/nedis/codis/RoundRobinNedisClientPool.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/test-classes/io/codis/nedis/codis/TestBoundedExponentialBackoffRetryUntilElapsed$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/test-classes/io/codis/nedis/codis/TestBoundedExponentialBackoffRetryUntilElapsed$FakeRetrySleeper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/test-classes/io/codis/nedis/codis/TestBoundedExponentialBackoffRetryUntilElapsed.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/test-classes/io/codis/nedis/codis/TestRoundRobinJedisPool$1.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/test-classes/io/codis/nedis/codis/TestRoundRobinJedisPool.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/codis-client/target/test-classes/io/codis/nedis/codis/ZooKeeperServerWapper.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/release.properties" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/codis-client/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/codis-client/pom.xml.releaseBackup" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nedis-bench/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/nedis-bench/pom.xml.releaseBackup" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nedis-client/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/nedis-client/pom.xml.releaseBackup" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/release.properties" afterPath="$PROJECT_DIR$/release.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/nedis-client/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -74,11 +97,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+            <state relative-caret-position="345">
+              <caret line="23" column="36" lean-forward="false" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RoundRobinNedisClientPool.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/codis-client/src/main/java/io/codis/nedis/codis/RoundRobinNedisClientPool.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1095">
+              <caret line="120" column="79" lean-forward="false" selection-start-line="120" selection-start-column="79" selection-end-line="120" selection-end-column="79" />
               <folding />
             </state>
           </provider>
@@ -94,7 +127,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Makefile" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Makefile">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -148,9 +181,9 @@
         <option value="$PROJECT_DIR$/nedis-client/src/test/java/io/codis/nedis/TestCommands.java" />
         <option value="$PROJECT_DIR$/nedis-client/src/test/java/io/codis/nedis/SimpleTest.java" />
         <option value="$PROJECT_DIR$/nedis-client/pom.xml" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/release.properties" />
         <option value="$PROJECT_DIR$/Makefile" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -212,11 +245,6 @@
             <path>
               <item name="nedis" type="b2602c69:ProjectViewProjectNode" />
               <item name="nedis" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nedis" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nedis" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -406,7 +434,7 @@
       <updated>1515034735576</updated>
       <workItem from="1515034737087" duration="6529000" />
       <workItem from="1515063271213" duration="1874000" />
-      <workItem from="1515065925885" duration="4228000" />
+      <workItem from="1515065925885" duration="4715000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1515068909194</created>
@@ -464,7 +492,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515070258703</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="init">
+      <created>1515070587353</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1515070587353</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -500,7 +535,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12631000" />
+    <option name="totallyTimeSpent" value="13118000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -512,7 +547,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23015873" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30706245" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -823,14 +858,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/release.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -859,6 +886,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/codis-client/src/main/java/io/codis/nedis/codis/RoundRobinNedisClientPool.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1095">
+          <caret line="120" column="79" lean-forward="false" selection-start-line="120" selection-start-column="79" selection-end-line="120" selection-end-column="79" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="36" lean-forward="false" selection-start-line="23" selection-start-column="36" selection-end-line="23" selection-end-column="36" />
           <folding />
         </state>
       </provider>

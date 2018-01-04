@@ -21,7 +21,6 @@
     </scm>
     <modules>
         <module>nedis-client</module>
-        <module>codis-client</module>
         <module>nedis-bench</module>
     </modules>
     <properties>
