@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0db91867-66b1-4368-aeef-05b00a8c3af0" name="Default" comment="init">
+    <list default="true" id="0db91867-66b1-4368-aeef-05b00a8c3af0" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/nedis-0.2.0-SNAPSHOT.pom" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/codis-client/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/codis-client/pom.xml.releaseBackup" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nedis-bench/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/nedis-bench/pom.xml.releaseBackup" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nedis-client/pom.xml.releaseBackup" afterPath="$PROJECT_DIR$/nedis-client/pom.xml.releaseBackup" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/release.properties" afterPath="$PROJECT_DIR$/release.properties" />
     </list>
     <ignored path="$PROJECT_DIR$/nedis-client/target/" />
@@ -21,7 +25,7 @@
       <file leaf-file-name="NedisClient.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nedis-client/src/main/java/io/codis/nedis/NedisClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
+            <state relative-caret-position="0">
               <caret line="33" column="15" lean-forward="false" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
               <folding />
             </state>
@@ -63,42 +67,9 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nedis-client/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
+            <state relative-caret-position="-1042">
               <caret line="22" column="52" lean-forward="false" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
-              <folding>
-                <marker date="1515069989000" expanded="true" signature="555:957" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="976:2072" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="997:1112" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="1133:1246" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="1267:1390" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="1411:1563" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="1584:1718" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="1739:1886" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="1907:2052" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2084:4724" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2102:4711" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2123:2836" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2312:2814" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2344:2543" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2424:2510" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2575:2784" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2660:2751" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="2857:3275" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3043:3253" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3075:3223" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3107:3190" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3296:3924" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3489:3902" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3521:3872" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3602:3680" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3720:3839" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="3945:4692" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="4136:4670" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="4168:4400" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="4286:4367" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="4432:4640" ph="..." />
-                <marker date="1515069989000" expanded="true" signature="4520:4607" ph="..." />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,17 +94,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="release.properties" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/release.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Makefile" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Makefile">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -189,6 +150,7 @@
         <option value="$PROJECT_DIR$/nedis-client/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/release.properties" />
+        <option value="$PROJECT_DIR$/Makefile" />
       </list>
     </option>
   </component>
@@ -211,6 +173,12 @@
         <option name="importAutomatically" value="true" />
       </MavenImportingSettings>
     </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand />
+      <select />
+    </treeState>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
     <option name="y" value="23" />
@@ -438,7 +406,7 @@
       <updated>1515034735576</updated>
       <workItem from="1515034737087" duration="6529000" />
       <workItem from="1515063271213" duration="1874000" />
-      <workItem from="1515065925885" duration="3900000" />
+      <workItem from="1515065925885" duration="4228000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1515068909194</created>
@@ -489,7 +457,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515070207038</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="init">
+      <created>1515070258703</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1515070258703</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -525,7 +500,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12303000" />
+    <option name="totallyTimeSpent" value="12631000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
@@ -537,13 +512,13 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30706245" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32958034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2026862" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2026862" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -655,40 +630,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="13" lean-forward="true" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="27" />
-          <folding>
-            <marker date="1515069989000" expanded="true" signature="555:957" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="976:2072" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="997:1112" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1133:1246" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1267:1390" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1411:1563" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1584:1718" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1739:1886" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1907:2052" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2084:4724" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2102:4711" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2123:2836" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2312:2814" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2344:2543" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2424:2510" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2575:2784" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2660:2751" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2857:3275" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3043:3253" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3075:3223" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3107:3190" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3296:3924" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3489:3902" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3521:3872" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3602:3680" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3720:3839" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3945:4692" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4136:4670" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4168:4400" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4286:4367" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4432:4640" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4520:4607" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -838,7 +780,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nedis-client/src/main/java/io/codis/nedis/NedisClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
+        <state relative-caret-position="0">
           <caret line="33" column="15" lean-forward="false" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
           <folding />
         </state>
@@ -881,59 +823,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nedis-client/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="52" lean-forward="false" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
-          <folding>
-            <marker date="1515069989000" expanded="true" signature="555:957" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="976:2072" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="997:1112" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1133:1246" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1267:1390" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1411:1563" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1584:1718" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1739:1886" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="1907:2052" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2084:4724" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2102:4711" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2123:2836" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2312:2814" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2344:2543" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2424:2510" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2575:2784" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2660:2751" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="2857:3275" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3043:3253" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3075:3223" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3107:3190" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3296:3924" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3489:3902" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3521:3872" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3602:3680" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3720:3839" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="3945:4692" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4136:4670" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4168:4400" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4286:4367" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4432:4640" ph="..." />
-            <marker date="1515069989000" expanded="true" signature="4520:4607" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/release.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -946,7 +847,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/release.properties">
+    <entry file="file://$PROJECT_DIR$/nedis-client/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1042">
+          <caret line="22" column="52" lean-forward="false" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
