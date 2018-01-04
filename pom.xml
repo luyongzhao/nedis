@@ -8,7 +8,7 @@
     </parent>
     <groupId>io.codis.nedis</groupId>
     <artifactId>nedis</artifactId>
-    <version>0.2.5</version>
+    <version>0.2.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>nedis</name>
     <description>Redis client based on netty</description>
@@ -17,7 +17,7 @@
         <connection>scm:git:https://git.mobike.io/iothub/nedis</connection>
         <developerConnection>scm:git:git@git.mobike.io:iothub/nedis.git</developerConnection>
         <url>https://git.mobike.io/iothub/nedis</url>
-        <tag>0.2.5</tag>
+        <tag>HEAD</tag>
     </scm>
     <modules>
         <module>nedis-client</module>
