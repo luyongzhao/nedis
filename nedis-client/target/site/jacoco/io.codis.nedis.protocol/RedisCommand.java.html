@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RedisCommand.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis.protocol</a> &gt; <span class="el_source">RedisCommand.java</span></div><h1>RedisCommand.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis.protocol;
+
+import java.nio.charset.StandardCharsets;
+
+/**
+ * @author Apache9
+ */
+<span class="pc" id="L23">public enum RedisCommand {</span>
+<span class="fc" id="L24">    APPEND, ASKING, AUTH, BGREWRITEAOF, BGSAVE, BITCOUNT, BITOP, BITPOS, BLPOP, BRPOP, BRPOPLPUSH,</span>
+<span class="fc" id="L25">    CLIENT, CLUSTER, CONFIG, DBSIZE, DEBUG, DECR, DECRBY, DEL, DISCARD, DUMP, ECHO, EVAL, EVALSHA,</span>
+<span class="fc" id="L26">    EXEC, EXISTS, EXPIRE, EXPIREAT, FLUSHALL, FLUSHDB, GET, GETBIT, GETRANGE, GETSET, HDEL,</span>
+<span class="fc" id="L27">    HEXISTS, HGET, HGETALL, HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET, HMSET, HSCAN, HSET, HSETNX,</span>
+<span class="fc" id="L28">    HVALS, INCR, INCRBY, INCRBYFLOAT, INFO, KEYS, LASTSAVE, LINDEX, LINSERT, LLEN, LPOP, LPUSH,</span>
+<span class="fc" id="L29">    LPUSHX, LRANGE, LREM, LSET, LTRIM, MGET, MIGRATE, MONITOR, MOVE, MSET, MSETNX, MULTI, OBJECT,</span>
+<span class="fc" id="L30">    PERSIST, PEXPIRE, PEXPIREAT, PFADD, PFCOUNT, PFMERGE, PING, PSETEX, PSUBSCRIBE, PTTL, PUBLISH,</span>
+<span class="fc" id="L31">    PUBSUB, PUNSUBSCRIBE, QUIT, RANDOMKEY, RENAME, RENAMENX, RENAMEX, RESTORE, ROLE, RPOP,</span>
+<span class="fc" id="L32">    RPOPLPUSH, RPUSH, RPUSHX, SADD, SAVE, SCAN, SCARD, SCRIPT, SDIFF, SDIFFSTORE, SELECT, SENTINEL,</span>
+<span class="fc" id="L33">    SET, SETBIT, SETEX, SETNX, SETRANGE, SHUTDOWN, SINTER, SINTERSTORE, SISMEMBER, SLAVEOF,</span>
+<span class="fc" id="L34">    SLOWLOG, SMEMBERS, SMOVE, SORT, SPOP, SRANDMEMBER, SREM, SSCAN, STRLEN, SUBSCRIBE, SUBSTR,</span>
+<span class="fc" id="L35">    SUNION, SUNIONSTORE, SYNC, TIME, TTL, TYPE, UNSUBSCRIBE, UNWATCH, WAIT, WATCH, ZADD, ZCARD,</span>
+<span class="fc" id="L36">    ZCOUNT, ZINCRBY, ZINTERSTORE, ZLEXCOUNT, ZRANGE, ZRANGEBYLEX, ZRANGEBYSCORE, ZRANK, ZREM,</span>
+<span class="fc" id="L37">    ZREMRANGEBYLEX, ZREMRANGEBYRANK, ZREMRANGEBYSCORE, ZREVRANGE, ZREVRANGEBYLEX, ZREVRANGEBYSCORE,</span>
+<span class="fc" id="L38">    ZREVRANK, ZSCAN, ZSCORE, ZUNIONSTORE;</span>
+
+    public final byte[] raw;
+
+<span class="fc" id="L42">    RedisCommand() {</span>
+<span class="fc" id="L43">        raw = name().getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L44">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,0 +1,83 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+nedis-client,io.codis.nedis,NedisClientPoolImpl.InitializeFutureListener,0,39,0,2,0,10,0,3,0,2
+nedis-client,io.codis.nedis,NedisClientBuilder.new ChannelInitializer() {...},0,30,0,0,0,4,0,2,0,2
+nedis-client,io.codis.nedis,NedisClientBuilder.new ChannelFutureListener() {...},6,26,1,1,1,4,1,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.14.new FutureListener() {...},69,0,6,0,16,0,5,0,2,0
+nedis-client,io.codis.nedis,NedisClientBuilder,5,92,0,2,1,21,1,9,1,8
+nedis-client,io.codis.nedis,NedisClientPoolImpl.State,5,53,0,0,0,2,1,3,1,3
+nedis-client,io.codis.nedis,PromiseConverter.16.new FutureListener() {...},48,0,6,0,11,0,5,0,2,0
+nedis-client,io.codis.nedis,NedisClientPoolImpl.2.new FutureListener() {...},5,50,1,3,0,8,1,3,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.5.new FutureListener() {...},48,0,6,0,11,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.7.new FutureListener() {...},19,29,3,3,3,8,3,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.9.new FutureListener() {...},52,0,4,0,11,0,4,0,2,0
+nedis-client,io.codis.nedis,NedisClientPoolImpl,79,324,8,25,14,72,9,20,1,10
+nedis-client,io.codis.nedis,NedisClientImpl.new Callable() {...},2,33,1,1,1,6,1,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.10.new FutureListener() {...},83,0,6,0,16,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.12.new FutureListener() {...},57,0,6,0,14,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.1.new FutureListener() {...},21,27,4,2,4,7,3,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.3.new FutureListener() {...},19,30,3,3,3,8,3,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.13.new FutureListener() {...},54,0,6,0,13,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.15.new FutureListener() {...},79,0,10,0,16,0,7,0,2,0
+nedis-client,io.codis.nedis,NedisClientPoolBuilder,39,77,1,1,10,21,7,10,6,10
+nedis-client,io.codis.nedis,PromiseConverter,0,90,0,0,0,20,0,18,0,18
+nedis-client,io.codis.nedis,NedisClientImpl,3647,330,48,4,300,54,192,21,167,20
+nedis-client,io.codis.nedis,PromiseConverter.6.new FutureListener() {...},47,0,6,0,11,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.4.new FutureListener() {...},51,0,6,0,11,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.8.new FutureListener() {...},6,32,1,3,1,8,1,3,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},0,10,0,0,0,2,0,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},0,10,0,0,0,2,0,2,0,2
+nedis-client,io.codis.nedis,NedisClientPoolImpl.new Object() {...},4,29,0,0,0,1,0,1,0,1
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},0,10,0,0,0,2,0,2,0,2
+nedis-client,io.codis.nedis,NedisClientPoolImpl.new FutureListener() {...},19,101,3,13,3,21,3,7,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},0,10,0,0,0,2,0,2,0,2
+nedis-client,io.codis.nedis,NedisClientPoolImpl.new FutureListener() {...},6,23,1,1,1,4,1,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},0,10,0,0,0,2,0,2,0,2
+nedis-client,io.codis.nedis,PromiseConverter.new PromiseConverter() {...},6,4,0,0,1,1,1,1,1,1
+nedis-client,io.codis.nedis,PromiseConverter.11.new FutureListener() {...},84,0,6,0,18,0,5,0,2,0
+nedis-client,io.codis.nedis,PromiseConverter.2.new FutureListener() {...},26,39,5,5,3,10,4,3,0,2
+nedis-client,io.codis.nedis.util,NedisClientHashSet.Entry,0,36,0,0,0,12,0,3,0,3
+nedis-client,io.codis.nedis.util,NedisUtils,69,88,3,3,13,19,11,9,9,8
+nedis-client,io.codis.nedis.util,NedisClientHashSet,8,277,4,26,2,64,4,21,0,10
+nedis-client,io.codis.nedis.util,AbstractNedisBuilder,13,46,2,8,3,14,3,8,1,5
+nedis-client,io.codis.nedis.util,NedisUtils.Invoker.new FutureListener() {...},9,38,1,1,1,5,1,2,0,2
+nedis-client,io.codis.nedis.util,NedisUtils.Invoker.new FutureListener() {...},0,32,0,2,0,6,0,3,0,2
+nedis-client,io.codis.nedis.util,NedisUtils.Invoker.new FutureListener() {...},0,16,1,1,0,4,1,2,0,2
+nedis-client,io.codis.nedis.util,NedisUtils.Invoker.new FutureListener() {...},7,32,1,1,1,5,1,2,0,2
+nedis-client,io.codis.nedis.util,NedisUtils.new Comparator() {...},40,3,6,0,6,1,4,1,1,1
+nedis-client,io.codis.nedis.util,NedisUtils.Invoker,16,105,3,5,3,20,3,7,0,6
+nedis-client,io.codis.nedis.util,NedisUtils.Invoker.new FutureListener() {...},0,57,0,4,0,7,0,4,0,2
+nedis-client,io.codis.nedis.protocol,HashEntry,15,0,0,0,6,0,3,0,3,0
+nedis-client,io.codis.nedis.protocol,SetParams,57,0,0,0,21,0,11,0,11,0
+nedis-client,io.codis.nedis.protocol,SortParams,130,0,2,0,36,0,17,0,16,0
+nedis-client,io.codis.nedis.protocol,SortedSetEntry,15,0,0,0,6,0,3,0,3,0
+nedis-client,io.codis.nedis.protocol,ListsCommands.LIST_POSITION,9,35,0,0,0,5,2,2,2,2
+nedis-client,io.codis.nedis.protocol,ScanParams,34,4,2,0,11,1,8,1,7,1
+nedis-client,io.codis.nedis.protocol,ZSetOpParams,78,0,6,0,21,0,11,0,8,0
+nedis-client,io.codis.nedis.protocol,Aggregate,54,0,0,0,5,0,4,0,4,0
+nedis-client,io.codis.nedis.protocol,BitOp,9,55,0,0,0,5,2,2,2,2
+nedis-client,io.codis.nedis.protocol,RedisCommand,5,1589,0,0,0,19,1,3,1,3
+nedis-client,io.codis.nedis.protocol,ScanResult,28,0,2,0,8,0,6,0,5,0
+nedis-client,io.codis.nedis.protocol,RedisKeyword,9,265,0,0,0,6,2,2,2,2
+nedis-client,io.codis.nedis.exception,TxnAbortException,16,0,0,0,8,0,4,0,4,0
+nedis-client,io.codis.nedis.exception,RedisResponseException,12,4,0,0,6,2,3,1,3,1
+nedis-client,io.codis.nedis.exception,TxnDiscardException,13,3,0,0,6,2,3,1,3,1
+nedis-client,io.codis.nedis.handler,RedisRequest,0,15,0,0,0,6,0,3,0,3
+nedis-client,io.codis.nedis.handler,RedisResponseDecoder.new ByteBufProcessor() {...},5,47,1,3,1,8,1,3,0,2
+nedis-client,io.codis.nedis.handler,RedisResponseDecoder.new ByteBufProcessor() {...},28,20,5,1,4,4,3,2,0,2
+nedis-client,io.codis.nedis.handler,RedisRequestEncoder,128,270,9,11,23,34,9,14,4,9
+nedis-client,io.codis.nedis.handler,TxnRedisRequest,0,15,0,0,0,6,0,3,0,3
+nedis-client,io.codis.nedis.handler,RedisDuplexHandler.new Object() {...},3,23,0,0,0,1,0,1,0,1
+nedis-client,io.codis.nedis.handler,RedisDuplexHandler.TimeoutTask,80,20,11,1,15,6,6,2,0,2
+nedis-client,io.codis.nedis.handler,RedisDuplexHandler,177,203,22,18,33,47,17,16,0,12
+nedis-client,io.codis.nedis.handler,RedisDuplexHandler.Entry,0,9,0,0,0,4,0,1,0,1
+nedis-client,io.codis.nedis.handler,RedisResponseDecoder,318,0,48,0,76,0,34,0,8,0

@@ -1,0 +1,6 @@
+io/codis/nedis/codis/ZooKeeperServerWapper.class
+io/codis/nedis/codis/TestRoundRobinJedisPool$1.class
+io/codis/nedis/codis/TestBoundedExponentialBackoffRetryUntilElapsed.class
+io/codis/nedis/codis/TestRoundRobinJedisPool.class
+io/codis/nedis/codis/TestBoundedExponentialBackoffRetryUntilElapsed$FakeRetrySleeper.class
+io/codis/nedis/codis/TestBoundedExponentialBackoffRetryUntilElapsed$1.class

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="codis-client" />
+        <module name="nedis-bench" />
+        <module name="nedis-client" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="codis-client" target="1.7" />
+      <module name="nedis" target="1.7" />
+      <module name="nedis-bench" target="1.7" />
+      <module name="nedis-client" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

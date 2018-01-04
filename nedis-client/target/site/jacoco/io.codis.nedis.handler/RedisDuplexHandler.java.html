@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RedisDuplexHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis.handler</a> &gt; <span class="el_source">RedisDuplexHandler.java</span></div><h1>RedisDuplexHandler.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis.handler;
+
+import io.codis.nedis.exception.TxnAbortException;
+import io.codis.nedis.exception.TxnDiscardException;
+import io.codis.nedis.protocol.TransactionsCommands;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.UnsupportedMessageTypeException;
+import io.netty.handler.timeout.ReadTimeoutException;
+import io.netty.util.concurrent.Promise;
+
+import static io.codis.nedis.protocol.RedisCommand.DISCARD;
+import static io.codis.nedis.protocol.RedisCommand.EXEC;
+import static io.codis.nedis.protocol.RedisCommand.MULTI;
+
+import java.nio.channels.ClosedChannelException;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author Apache9
+ */
+public class RedisDuplexHandler extends ChannelDuplexHandler {
+
+    private static final class Entry {
+
+        public final Promise&lt;Object&gt; promise;
+
+        public final long nanoTime;
+
+<span class="fc" id="L51">        public Entry(Promise&lt;Object&gt; promise, long nanoTime) {</span>
+<span class="fc" id="L52">            this.promise = promise;</span>
+<span class="fc" id="L53">            this.nanoTime = nanoTime;</span>
+<span class="fc" id="L54">        }</span>
+    }
+
+<span class="fc" id="L57">    private static final Entry TXN_MARKER = new Entry(null, 0);</span>
+
+<span class="fc" id="L59">    private final Deque&lt;Entry&gt; entryQ = new ArrayDeque&lt;&gt;();</span>
+
+    private long timeoutNs;
+
+    private ScheduledFuture&lt;?&gt; timeoutTask;
+
+    private boolean inMulti;
+
+<span class="fc" id="L67">    public RedisDuplexHandler(long timeoutNs) {</span>
+<span class="fc" id="L68">        this.timeoutNs = timeoutNs;</span>
+<span class="fc" id="L69">    }</span>
+
+    public long getTimeoutNs() {
+<span class="fc" id="L72">        return timeoutNs;</span>
+    }
+
+    public void setTimeoutNs(long timeoutNs) {
+<span class="fc" id="L76">        this.timeoutNs = timeoutNs;</span>
+<span class="fc" id="L77">    }</span>
+
+    private void scheduleTimeoutTask(ChannelHandlerContext ctx) {
+<span class="pc bpc" id="L80" title="1 of 4 branches missed.">        if (timeoutNs &gt; 0 &amp;&amp; timeoutTask == null) {</span>
+<span class="fc" id="L81">            timeoutTask = ctx.executor().schedule(new TimeoutTask(ctx), timeoutNs,</span>
+                    TimeUnit.NANOSECONDS);
+        }
+<span class="fc" id="L84">    }</span>
+
+    private void writeNormal(ChannelHandlerContext ctx, RedisRequest req, ChannelPromise promise) {
+<span class="fc" id="L87">        entryQ.addLast(new Entry(req.getPromise(), System.nanoTime()));</span>
+<span class="fc" id="L88">        ctx.write(req.getParams(), promise);</span>
+<span class="fc" id="L89">    }</span>
+
+    // How to deal with txn:
+    // When MULTI, append a TXN_MARKER to the end of entryQ after the entry of MULTI command itself.
+    // When EXEC or DISCARD, also append a TXN_MARKER to the end of entryQ before the entry of the
+    // command itself.
+    // In channelRead, if the top of entryQ is a TXN_MARKER, then decode the msg and fill the
+    // entries in entryQ until reaching the next TXN_MARKER.
+    private void writeTxn(ChannelHandlerContext ctx, TxnRedisRequest req, ChannelPromise promise) {
+<span class="pc bpc" id="L98" title="3 of 4 branches missed.">        switch (req.getCmd()) {</span>
+            case MULTI: {
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">                if (inMulti) {</span>
+<span class="nc" id="L101">                    req.getPromise().tryFailure(new IllegalStateException(&quot;Already in MULTI&quot;));</span>
+<span class="nc" id="L102">                    break;</span>
+                }
+<span class="fc" id="L104">                inMulti = true;</span>
+<span class="fc" id="L105">                ctx.write(RedisRequestEncoder.encode(ctx.alloc(), MULTI.raw), promise);</span>
+<span class="fc" id="L106">                entryQ.addLast(new Entry(req.getPromise(), System.nanoTime()));</span>
+<span class="fc" id="L107">                entryQ.addLast(TXN_MARKER);</span>
+<span class="fc" id="L108">                break;</span>
+            }
+            case EXEC: {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">                if (!inMulti) {</span>
+<span class="nc" id="L112">                    req.getPromise().tryFailure(new IllegalStateException(&quot;not in MULTI&quot;));</span>
+<span class="nc" id="L113">                    break;</span>
+                }
+<span class="nc" id="L115">                ctx.write(RedisRequestEncoder.encode(ctx.alloc(), EXEC.raw), promise);</span>
+<span class="nc" id="L116">                inMulti = false;</span>
+<span class="nc" id="L117">                entryQ.addLast(TXN_MARKER);</span>
+<span class="nc" id="L118">                entryQ.addLast(new Entry(req.getPromise(), System.nanoTime()));</span>
+<span class="nc" id="L119">                break;</span>
+            }
+            case DISCARD: {
+<span class="nc bnc" id="L122" title="All 2 branches missed.">                if (!inMulti) {</span>
+<span class="nc" id="L123">                    req.getPromise().tryFailure(new IllegalStateException(&quot;not in MULTI&quot;));</span>
+<span class="nc" id="L124">                    break;</span>
+                }
+<span class="nc" id="L126">                ctx.write(RedisRequestEncoder.encode(ctx.alloc(), DISCARD.raw), promise);</span>
+<span class="nc" id="L127">                inMulti = false;</span>
+<span class="nc" id="L128">                entryQ.addLast(TXN_MARKER);</span>
+<span class="nc" id="L129">                entryQ.addLast(new Entry(req.getPromise(), System.nanoTime()));</span>
+<span class="nc" id="L130">                break;</span>
+            }
+            default:
+<span class="nc" id="L133">                throw new IllegalArgumentException(req.getCmd() + &quot; is not a transactional command&quot;);</span>
+        }
+<span class="fc" id="L135">    }</span>
+
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)
+            throws Exception {
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (msg instanceof RedisRequest) {</span>
+<span class="fc" id="L141">            writeNormal(ctx, (RedisRequest) msg, promise);</span>
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        } else if (msg instanceof TxnRedisRequest) {</span>
+<span class="fc" id="L143">            writeTxn(ctx, (TxnRedisRequest) msg, promise);</span>
+        } else {
+<span class="nc" id="L145">            throw new UnsupportedMessageTypeException(msg, RedisRequest.class,</span>
+                    TxnRedisRequest.class);
+        }
+<span class="fc" id="L148">        scheduleTimeoutTask(ctx);</span>
+<span class="fc" id="L149">    }</span>
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+<span class="pc bpc" id="L153" title="1 of 2 branches missed.">        if (msg.equals(TransactionsCommands.QUEUED)) {</span>
+            // this is the reply of a command in multi, just ignore
+<span class="nc" id="L155">            return;</span>
+        }
+<span class="fc" id="L157">        Entry entry = entryQ.pollFirst();</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (entry == null) {</span>
+<span class="fc" id="L159">            throw new IllegalStateException(&quot;Got response &quot; + msg + &quot; but no one is waiting for it&quot;);</span>
+        }
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (entry == TXN_MARKER) {</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">            if (msg == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L163">                TxnAbortException cause = new TxnAbortException();</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                while ((entry = entryQ.pollFirst()) != TXN_MARKER) {</span>
+<span class="nc" id="L165">                    entry.promise.tryFailure(cause);</span>
+                }
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">            } else if (msg instanceof String) {</span>
+<span class="fc" id="L168">                TxnDiscardException cause = new TxnDiscardException();</span>
+<span class="pc bpc" id="L169" title="1 of 2 branches missed.">                while ((entry = entryQ.pollFirst()) != TXN_MARKER) {</span>
+<span class="fc" id="L170">                    entry.promise.tryFailure(cause);</span>
+                }
+<span class="nc" id="L172">            } else {</span>
+                @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L174">                Iterator&lt;Object&gt; iter = ((List&lt;Object&gt;) msg).iterator();</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">                while ((entry = entryQ.pollFirst()) != TXN_MARKER) {</span>
+<span class="nc" id="L176">                    entry.promise.trySuccess(iter.next());</span>
+                }
+            }
+<span class="nc" id="L179">            entry = entryQ.pollFirst();</span>
+        }
+<span class="fc" id="L181">        entry.promise.trySuccess(msg);</span>
+<span class="fc" id="L182">    }</span>
+
+    private void failAll(Throwable cause) {
+<span class="pc bpc" id="L185" title="1 of 2 branches missed.">        for (Entry entry; (entry = entryQ.pollFirst()) != null;) {</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            if (entry == TXN_MARKER) {</span>
+<span class="nc" id="L187">                continue;</span>
+            }
+<span class="nc" id="L189">            entry.promise.tryFailure(cause);</span>
+        }
+<span class="fc" id="L191">    }</span>
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (!entryQ.isEmpty()) { // only create exception if necessary</span>
+<span class="nc" id="L196">            failAll(new ClosedChannelException());</span>
+        }
+<span class="fc" id="L198">    }</span>
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+<span class="fc" id="L202">        failAll(cause);</span>
+<span class="fc" id="L203">        ctx.close();</span>
+<span class="fc" id="L204">    }</span>
+
+    private final class TimeoutTask implements Runnable {
+
+        private final ChannelHandlerContext ctx;
+
+<span class="fc" id="L210">        public TimeoutTask(ChannelHandlerContext ctx) {</span>
+<span class="fc" id="L211">            this.ctx = ctx;</span>
+<span class="fc" id="L212">        }</span>
+
+        @Override
+        public void run() {
+<span class="pc bpc" id="L216" title="3 of 4 branches missed.">            if (entryQ.isEmpty() || timeoutNs &lt;= 0) {</span>
+<span class="fc" id="L217">                timeoutTask = null;</span>
+<span class="fc" id="L218">                return;</span>
+            }
+<span class="nc" id="L220">            boolean refillTxnMarker = false;</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (entryQ.peekFirst() == TXN_MARKER) {</span>
+<span class="nc" id="L222">                entryQ.removeFirst();</span>
+<span class="nc" id="L223">                refillTxnMarker = true;</span>
+            }
+<span class="nc bnc" id="L225" title="All 2 branches missed.">            if (entryQ.isEmpty()) {</span>
+<span class="nc" id="L226">                entryQ.addFirst(TXN_MARKER);</span>
+<span class="nc" id="L227">                timeoutTask = null;</span>
+<span class="nc" id="L228">                return;</span>
+            }
+<span class="nc" id="L230">            long nextDelayNs = timeoutNs - (System.nanoTime() - entryQ.peek().nanoTime);</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">            if (nextDelayNs &lt;= 0) {</span>
+<span class="nc" id="L232">                exceptionCaught(ctx, ReadTimeoutException.INSTANCE);</span>
+            } else {
+<span class="nc" id="L234">                timeoutTask = ctx.executor().schedule(this, nextDelayNs, TimeUnit.NANOSECONDS);</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                if (refillTxnMarker) {</span>
+<span class="nc" id="L236">                    entryQ.addFirst(TXN_MARKER);</span>
+                }
+            }
+<span class="nc" id="L239">        }</span>
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NedisClientHashSet.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis.util</a> &gt; <span class="el_source">NedisClientHashSet.java</span></div><h1>NedisClientHashSet.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis.util;
+
+import io.codis.nedis.NedisClient;
+
+/**
+ * An identity LinkedHashSet.
+ * 
+ * @author Apache9
+ */
+public class NedisClientHashSet {
+
+    private static final float LOAD_FACTOR = 0.75f;
+
+    private static final int MAXIMUM_CAPACITY = 1 &lt;&lt; 30;
+
+    private static final class Entry {
+
+        final NedisClient value;
+
+        Entry next;
+
+        Entry before;
+
+        Entry after;
+
+<span class="fc" id="L41">        public Entry(NedisClient value, Entry next) {</span>
+<span class="fc" id="L42">            this.value = value;</span>
+<span class="fc" id="L43">            this.next = next;</span>
+<span class="fc" id="L44">        }</span>
+
+        public void remove() {
+<span class="fc" id="L47">            before.after = after;</span>
+<span class="fc" id="L48">            after.before = before;</span>
+<span class="fc" id="L49">        }</span>
+
+        public void addBefore(Entry existingEntry) {
+<span class="fc" id="L52">            after = existingEntry;</span>
+<span class="fc" id="L53">            before = existingEntry.before;</span>
+<span class="fc" id="L54">            before.after = this;</span>
+<span class="fc" id="L55">            after.before = this;</span>
+<span class="fc" id="L56">        }</span>
+    }
+
+    private final Entry[] table;
+
+    private Entry header;
+
+    private int size;
+
+    private static final int tableSizeFor(int cap) {
+<span class="fc" id="L66">        int n = cap - 1;</span>
+<span class="fc" id="L67">        n |= n &gt;&gt;&gt; 1;</span>
+<span class="fc" id="L68">        n |= n &gt;&gt;&gt; 2;</span>
+<span class="fc" id="L69">        n |= n &gt;&gt;&gt; 4;</span>
+<span class="fc" id="L70">        n |= n &gt;&gt;&gt; 8;</span>
+<span class="fc" id="L71">        n |= n &gt;&gt;&gt; 16;</span>
+<span class="pc bpc" id="L72" title="2 of 4 branches missed.">        return (n &lt; 0) ? 1 : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;</span>
+    }
+
+    private int indexFor(NedisClient client) {
+<span class="fc" id="L76">        int h = System.identityHashCode(client);</span>
+<span class="fc" id="L77">        h = h ^ (h &gt;&gt;&gt; 16);</span>
+<span class="fc" id="L78">        return h &amp; (table.length - 1);</span>
+    }
+
+<span class="fc" id="L81">    public NedisClientHashSet(int size) {</span>
+<span class="fc" id="L82">        table = new Entry[tableSizeFor((int) (size / LOAD_FACTOR))];</span>
+<span class="fc" id="L83">        header = new Entry(null, null);</span>
+<span class="fc" id="L84">        header.before = header.after = header;</span>
+<span class="fc" id="L85">    }</span>
+
+    public boolean isEmpty() {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        return size == 0;</span>
+    }
+
+    public int size() {
+<span class="fc" id="L92">        return size;</span>
+    }
+
+    public boolean add(NedisClient value) {
+<span class="fc" id="L96">        int i = indexFor(value);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        for (Entry e = table[i]; e != null; e = e.next) {</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            if (e.value == value) {</span>
+<span class="fc" id="L99">                return false;</span>
+            }
+        }
+<span class="fc" id="L102">        Entry old = table[i];</span>
+<span class="fc" id="L103">        Entry e = new Entry(value, old);</span>
+<span class="fc" id="L104">        table[i] = e;</span>
+<span class="fc" id="L105">        e.addBefore(header);</span>
+<span class="fc" id="L106">        size++;</span>
+<span class="fc" id="L107">        return true;</span>
+    }
+
+    public boolean contains(NedisClient value) {
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        if (isEmpty()) {</span>
+<span class="fc" id="L112">            return false;</span>
+        }
+<span class="fc" id="L114">        int i = indexFor(value);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        for (Entry e = table[i]; e != null; e = e.next) {</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            if (e.value == value) {</span>
+<span class="fc" id="L117">                return true;</span>
+            }
+        }
+<span class="fc" id="L120">        return false;</span>
+    }
+
+    public boolean remove(NedisClient value) {
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if (isEmpty()) {</span>
+<span class="fc" id="L125">            return false;</span>
+        }
+<span class="fc" id="L127">        int i = indexFor(value);</span>
+<span class="fc" id="L128">        Entry prev = table[i];</span>
+<span class="fc" id="L129">        Entry e = prev;</span>
+
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        while (e != null) {</span>
+<span class="fc" id="L132">            Entry next = e.next;</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (value == e.value) {</span>
+<span class="fc" id="L134">                size--;</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">                if (prev == e) {</span>
+<span class="fc" id="L136">                    table[i] = next;</span>
+                } else {
+<span class="fc" id="L138">                    prev.next = next;</span>
+                }
+<span class="fc" id="L140">                e.remove();</span>
+<span class="fc" id="L141">                return true;</span>
+            }
+<span class="fc" id="L143">            prev = e;</span>
+<span class="fc" id="L144">            e = next;</span>
+<span class="fc" id="L145">        }</span>
+
+<span class="nc" id="L147">        return false;</span>
+    }
+
+    public NedisClient head(boolean remove) {
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (isEmpty()) {</span>
+<span class="nc" id="L152">            return null;</span>
+        }
+<span class="fc" id="L154">        Entry e = header.after;</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        if (remove) {</span>
+<span class="fc" id="L156">            remove(e.value);</span>
+        } else {
+<span class="fc" id="L158">            e.remove();</span>
+<span class="fc" id="L159">            e.addBefore(header);</span>
+        }
+<span class="fc" id="L161">        return e.value;</span>
+    }
+
+    public NedisClient[] toArray() {
+<span class="fc" id="L165">        NedisClient[] arr = new NedisClient[size];</span>
+<span class="fc" id="L166">        Entry e = header.after;</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (int i = 0; i &lt; size; i++) {</span>
+<span class="fc" id="L168">            arr[i] = e.value;</span>
+<span class="fc" id="L169">            e = e.after;</span>
+        }
+<span class="fc" id="L171">        return arr;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

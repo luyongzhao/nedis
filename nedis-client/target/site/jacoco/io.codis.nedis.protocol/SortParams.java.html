@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>SortParams.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis.protocol</a> &gt; <span class="el_source">SortParams.java</span></div><h1>SortParams.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis.protocol;
+
+import static io.codis.nedis.protocol.RedisKeyword.ALPHA;
+import static io.codis.nedis.protocol.RedisKeyword.ASC;
+import static io.codis.nedis.protocol.RedisKeyword.DESC;
+import static io.codis.nedis.protocol.RedisKeyword.GET;
+import static io.codis.nedis.util.NedisUtils.toBytes;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Apache9
+ * @see http://redis.io/commands/sort
+ */
+<span class="nc" id="L31">public class SortParams {</span>
+
+    private byte[] by;
+
+<span class="nc" id="L35">    private final List&lt;byte[]&gt; limit = new ArrayList&lt;&gt;(2);</span>
+
+<span class="nc" id="L37">    private final List&lt;byte[]&gt; get = new ArrayList&lt;&gt;();</span>
+
+    private byte[] order;
+
+    private byte[] alpha;
+
+    public SortParams by(byte[] pattern) {
+<span class="nc" id="L44">        this.by = pattern;</span>
+<span class="nc" id="L45">        return this;</span>
+    }
+
+    public SortParams limit(long offset, long count) {
+<span class="nc" id="L49">        limit.clear();</span>
+<span class="nc" id="L50">        limit.add(toBytes(offset));</span>
+<span class="nc" id="L51">        limit.add(toBytes(count));</span>
+<span class="nc" id="L52">        return this;</span>
+    }
+
+    public SortParams get(byte[]... patterns) {
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        for (byte[] pattern: patterns) {</span>
+<span class="nc" id="L57">            get.add(GET.raw);</span>
+<span class="nc" id="L58">            get.add(pattern);</span>
+        }
+<span class="nc" id="L60">        return this;</span>
+    }
+
+    public SortParams clearGet() {
+<span class="nc" id="L64">        get.clear();</span>
+<span class="nc" id="L65">        return this;</span>
+    }
+
+    public SortParams asc() {
+<span class="nc" id="L69">        order = ASC.raw;</span>
+<span class="nc" id="L70">        return this;</span>
+    }
+
+    public SortParams desc() {
+<span class="nc" id="L74">        order = DESC.raw;</span>
+<span class="nc" id="L75">        return this;</span>
+    }
+
+    public SortParams clearOrder() {
+<span class="nc" id="L79">        order = null;</span>
+<span class="nc" id="L80">        return this;</span>
+    }
+
+    public SortParams alpha() {
+<span class="nc" id="L84">        alpha = ALPHA.raw;</span>
+<span class="nc" id="L85">        return this;</span>
+    }
+
+    public SortParams clearAlpha() {
+<span class="nc" id="L89">        alpha = null;</span>
+<span class="nc" id="L90">        return this;</span>
+    }
+
+    public byte[] by() {
+<span class="nc" id="L94">        return by;</span>
+    }
+
+    public List&lt;byte[]&gt; limit() {
+<span class="nc" id="L98">        return limit;</span>
+    }
+
+    public List&lt;byte[]&gt; get() {
+<span class="nc" id="L102">        return get;</span>
+    }
+
+    public byte[] order() {
+<span class="nc" id="L106">        return order;</span>
+    }
+
+    public byte[] getAlpha() {
+<span class="nc" id="L110">        return alpha;</span>
+    }
+
+    public SortParams clear() {
+<span class="nc" id="L114">        by = null;</span>
+<span class="nc" id="L115">        limit.clear();</span>
+<span class="nc" id="L116">        get.clear();</span>
+<span class="nc" id="L117">        order = null;</span>
+<span class="nc" id="L118">        alpha = null;</span>
+<span class="nc" id="L119">        return this;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

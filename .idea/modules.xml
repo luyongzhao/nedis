@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/codis-client/codis-client.iml" filepath="$PROJECT_DIR$/codis-client/codis-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/nedis.iml" filepath="$PROJECT_DIR$/.idea/nedis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nedis-bench/nedis-bench.iml" filepath="$PROJECT_DIR$/nedis-bench/nedis-bench.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nedis-client/nedis-client.iml" filepath="$PROJECT_DIR$/nedis-client/nedis-client.iml" />
+    </modules>
+  </component>
+</project>

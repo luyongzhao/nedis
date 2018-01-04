@@ -1,0 +1,1270 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NedisClientImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis</a> &gt; <span class="el_source">NedisClientImpl.java</span></div><h1>NedisClientImpl.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis;
+
+import io.codis.nedis.handler.RedisDuplexHandler;
+import io.codis.nedis.handler.RedisRequest;
+import io.codis.nedis.handler.TxnRedisRequest;
+import io.codis.nedis.protocol.BitOp;
+import io.codis.nedis.protocol.HashEntry;
+import io.codis.nedis.protocol.RedisCommand;
+import io.codis.nedis.protocol.RedisKeyword;
+import io.codis.nedis.protocol.ScanParams;
+import io.codis.nedis.protocol.ScanResult;
+import io.codis.nedis.protocol.SetParams;
+import io.codis.nedis.protocol.SortParams;
+import io.codis.nedis.protocol.SortedSetEntry;
+import io.codis.nedis.protocol.ZSetOpParams;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.EventLoop;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.Promise;
+
+import static io.codis.nedis.handler.RedisRequestEncoder.encode;
+import static io.codis.nedis.handler.RedisRequestEncoder.encodeReverse;
+import static io.codis.nedis.protocol.RedisCommand.*;
+import static io.codis.nedis.protocol.RedisKeyword.BY;
+import static io.codis.nedis.protocol.RedisKeyword.COUNT;
+import static io.codis.nedis.protocol.RedisKeyword.EX;
+import static io.codis.nedis.protocol.RedisKeyword.FLUSH;
+import static io.codis.nedis.protocol.RedisKeyword.GETNAME;
+import static io.codis.nedis.protocol.RedisKeyword.KILL;
+import static io.codis.nedis.protocol.RedisKeyword.LIMIT;
+import static io.codis.nedis.protocol.RedisKeyword.LIST;
+import static io.codis.nedis.protocol.RedisKeyword.LOAD;
+import static io.codis.nedis.protocol.RedisKeyword.MATCH;
+import static io.codis.nedis.protocol.RedisKeyword.NX;
+import static io.codis.nedis.protocol.RedisKeyword.PX;
+import static io.codis.nedis.protocol.RedisKeyword.REPLACE;
+import static io.codis.nedis.protocol.RedisKeyword.RESETSTAT;
+import static io.codis.nedis.protocol.RedisKeyword.REWRITE;
+import static io.codis.nedis.protocol.RedisKeyword.SETNAME;
+import static io.codis.nedis.protocol.RedisKeyword.STORE;
+import static io.codis.nedis.protocol.RedisKeyword.WITHSCORES;
+import static io.codis.nedis.protocol.RedisKeyword.XX;
+import static io.codis.nedis.util.NedisUtils.toBytes;
+import static io.codis.nedis.util.NedisUtils.toParamsReverse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import javax.naming.OperationNotSupportedException;
+
+/**
+ * @author Apache9
+ */
+public class NedisClientImpl implements NedisClient {
+
+    private final Channel channel;
+
+    private final NedisClientPool pool;
+
+    private final PromiseConverter&lt;ScanResult&lt;byte[]&gt;&gt; arrayScanResultConverter;
+
+    private final PromiseConverter&lt;Boolean&gt; booleanConverter;
+
+    private final PromiseConverter&lt;List&lt;Boolean&gt;&gt; booleanListConverter;
+
+    private final PromiseConverter&lt;byte[]&gt; bytesConverter;
+
+    private final PromiseConverter&lt;Double&gt; doubleConverter;
+
+    private final PromiseConverter&lt;ScanResult&lt;HashEntry&gt;&gt; hashScanResultConverter;
+
+    private final PromiseConverter&lt;List&lt;byte[]&gt;&gt; listConverter;
+
+    private final PromiseConverter&lt;Long&gt; longConverter;
+
+    private final PromiseConverter&lt;Map&lt;byte[], byte[]&gt;&gt; mapConverter;
+
+    private final PromiseConverter&lt;Object&gt; objectConverter;
+
+    private final PromiseConverter&lt;List&lt;Object&gt;&gt; objectListConverter;
+
+    private final PromiseConverter&lt;Set&lt;byte[]&gt;&gt; setConverter;
+
+    private final PromiseConverter&lt;List&lt;SortedSetEntry&gt;&gt; sortedSetEntryListConverter;
+
+    private final PromiseConverter&lt;ScanResult&lt;SortedSetEntry&gt;&gt; sortedSetScanResultConverter;
+
+    private final PromiseConverter&lt;String&gt; stringConverter;
+
+    private final PromiseConverter&lt;Void&gt; voidConverter;
+
+<span class="fc" id="L113">    public NedisClientImpl(Channel channel, NedisClientPool pool) {</span>
+<span class="fc" id="L114">        this.channel = channel;</span>
+<span class="fc" id="L115">        this.pool = pool;</span>
+<span class="fc" id="L116">        EventLoop eventLoop = channel.eventLoop();</span>
+<span class="fc" id="L117">        this.listConverter = PromiseConverter.toList(eventLoop);</span>
+<span class="fc" id="L118">        this.booleanConverter = PromiseConverter.toBoolean(eventLoop);</span>
+<span class="fc" id="L119">        this.bytesConverter = PromiseConverter.toBytes(eventLoop);</span>
+<span class="fc" id="L120">        this.doubleConverter = PromiseConverter.toDouble(eventLoop);</span>
+<span class="fc" id="L121">        this.longConverter = PromiseConverter.toLong(eventLoop);</span>
+<span class="fc" id="L122">        this.objectConverter = PromiseConverter.toObject(eventLoop);</span>
+<span class="fc" id="L123">        this.stringConverter = PromiseConverter.toString(eventLoop);</span>
+<span class="fc" id="L124">        this.voidConverter = PromiseConverter.toVoid(eventLoop);</span>
+<span class="fc" id="L125">        this.arrayScanResultConverter = PromiseConverter.toArrayScanResult(eventLoop);</span>
+<span class="fc" id="L126">        this.mapConverter = PromiseConverter.toMap(eventLoop);</span>
+<span class="fc" id="L127">        this.hashScanResultConverter = PromiseConverter.toHashScanResult(eventLoop);</span>
+<span class="fc" id="L128">        this.setConverter = PromiseConverter.toSet(eventLoop);</span>
+<span class="fc" id="L129">        this.sortedSetEntryListConverter = PromiseConverter.toSortedSetEntryList(eventLoop);</span>
+<span class="fc" id="L130">        this.sortedSetScanResultConverter = PromiseConverter.toSortedSetScanResult(eventLoop);</span>
+<span class="fc" id="L131">        this.booleanListConverter = PromiseConverter.toBooleanList(eventLoop);</span>
+<span class="fc" id="L132">        this.objectListConverter = PromiseConverter.toObjectList(eventLoop);</span>
+<span class="fc" id="L133">    }</span>
+
+    @Override
+    public Future&lt;Long&gt; append(byte[] key, byte[] value) {
+<span class="nc" id="L137">        return execCmd(longConverter, encode(channel.alloc(), APPEND.raw, key, value));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; auth(byte[] password) {
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        if (pool != null) {</span>
+<span class="fc" id="L143">            return eventLoop().newFailedFuture(</span>
+                    new OperationNotSupportedException(
+                            &quot;'auth' is not allowed on a pooled connection&quot;));
+        }
+<span class="nc" id="L147">        return auth0(password);</span>
+    }
+
+    Future&lt;Void&gt; auth0(byte[] password) {
+<span class="nc" id="L151">        return execCmd(voidConverter, encode(channel.alloc(), AUTH.raw, password));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; bgrewriteaof() {
+<span class="nc" id="L156">        return execCmd(voidConverter, encode(channel.alloc(), BGREWRITEAOF.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; bgsave() {
+<span class="nc" id="L161">        return execCmd(voidConverter, encode(channel.alloc(), BGSAVE.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; bitcount(byte[] key) {
+<span class="nc" id="L166">        return execCmd(longConverter, encode(channel.alloc(), BITCOUNT.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; bitcount(byte[] key, long startInclusive, long endInclusive) {
+<span class="nc" id="L171">        return execCmd(</span>
+                longConverter,
+<span class="nc" id="L173">                encode(channel.alloc(), BITCOUNT.raw, toBytes(startInclusive),</span>
+<span class="nc" id="L174">                        toBytes(endInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; bitop(BitOp op, byte[] dst, byte[]... keys) {
+<span class="nc" id="L179">        return execCmd(longConverter,</span>
+<span class="nc" id="L180">                encode(channel.alloc(), BITOP.raw, toParamsReverse(keys, op.raw, dst)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; bitpos(byte[] key, boolean bit) {
+<span class="nc" id="L185">        return execCmd(longConverter, encode(channel.alloc(), BITPOS.raw, key, toBytes(bit)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; bitpos(byte[] key, boolean bit, long startInclusive) {
+<span class="nc" id="L190">        return execCmd(longConverter,</span>
+<span class="nc" id="L191">                encode(channel.alloc(), BITPOS.raw, key, toBytes(bit), toBytes(startInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; bitpos(byte[] key, boolean bit, long startInclusive, long endInclusive) {
+<span class="nc" id="L196">        return execCmd(</span>
+                longConverter,
+<span class="nc" id="L198">                encode(channel.alloc(), BITPOS.raw, key, toBytes(bit), toBytes(startInclusive),</span>
+<span class="nc" id="L199">                        toBytes(endInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; blpop(long timeoutSeconds, byte[]... keys) {
+<span class="fc" id="L204">        return execCmd(listConverter,</span>
+<span class="fc" id="L205">                encode(channel.alloc(), BLPOP.raw, keys, toBytes(timeoutSeconds)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; brpop(long timeoutSeconds, byte[]... keys) {
+<span class="fc" id="L210">        return execCmd(listConverter,</span>
+<span class="fc" id="L211">                encode(channel.alloc(), BRPOP.raw, keys, toBytes(timeoutSeconds)));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; brpoplpush(byte[] src, byte[] dst, long timeoutSeconds) {
+<span class="nc" id="L216">        return execCmd(bytesConverter,</span>
+<span class="nc" id="L217">                encode(channel.alloc(), BRPOPLPUSH.raw, src, dst, toBytes(timeoutSeconds)));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; clientGetname() {
+<span class="nc" id="L222">        return execCmd(bytesConverter, encode(channel.alloc(), CLIENT.raw, GETNAME.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; clientKill(byte[] addr) {
+<span class="nc" id="L227">        return execCmd(voidConverter, encode(channel.alloc(), CLIENT.raw, KILL.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; clientList() {
+<span class="nc" id="L232">        return execCmd(bytesConverter, encode(channel.alloc(), CLIENT.raw, LIST.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; clientSetname(byte[] name) {
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        if (pool != null) {</span>
+<span class="nc" id="L238">            return eventLoop().newFailedFuture(</span>
+                    new OperationNotSupportedException(
+                            &quot;'client setname' is not allowed on a pooled connection&quot;));
+        }
+<span class="nc" id="L242">        return clientSetname0(name);</span>
+    }
+
+    Future&lt;Void&gt; clientSetname0(byte[] name) {
+<span class="fc" id="L246">        return execCmd(voidConverter, encode(channel.alloc(), CLIENT.raw, SETNAME.raw, name));</span>
+    }
+
+    @Override
+    public ChannelFuture close() {
+<span class="fc" id="L251">        return channel.close();</span>
+    }
+
+    @Override
+    public ChannelFuture closeFuture() {
+<span class="fc" id="L256">        return channel.closeFuture();</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; configGet(byte[] pattern) {
+<span class="nc" id="L261">        return execCmd(listConverter, encode(channel.alloc(), CONFIG.raw, RedisKeyword.GET.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; configResetstat() {
+<span class="nc" id="L266">        return execCmd(voidConverter, encode(channel.alloc(), CONFIG.raw, RESETSTAT.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; configRewrite() {
+<span class="nc" id="L271">        return execCmd(voidConverter, encode(channel.alloc(), CONFIG.raw, REWRITE.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; configSet(byte[] name, byte[] value) {
+<span class="nc" id="L276">        return execCmd(voidConverter, encode(channel.alloc(), CONFIG.raw, RedisKeyword.SET.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; dbsize() {
+<span class="nc" id="L281">        return execCmd(longConverter, encode(channel.alloc(), DBSIZE.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; decr(byte[] key) {
+<span class="nc" id="L286">        return execCmd(longConverter, encode(channel.alloc(), DECR.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; decrby(byte[] key, long delta) {
+<span class="nc" id="L291">        return execCmd(longConverter, encode(channel.alloc(), DECRBY.raw, key, toBytes(delta)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; del(byte[]... keys) {
+<span class="nc" id="L296">        return execCmd(longConverter, encode(channel.alloc(), DEL.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; discard() {
+<span class="nc" id="L301">        return execTxnCmd(voidConverter, DISCARD);</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; dump(byte[] key) {
+<span class="nc" id="L306">        return execCmd(bytesConverter, encode(channel.alloc(), DUMP.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; echo(byte[] msg) {
+<span class="nc" id="L311">        return execCmd(bytesConverter, encode(channel.alloc(), ECHO.raw, msg));</span>
+    }
+
+    private ByteBuf encodeSortParams(RedisCommand cmd, byte[] key, SortParams sort, byte[] dst) {
+<span class="nc" id="L315">        List&lt;byte[]&gt; params = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L316">        params.add(key);</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">        if (sort.by() != null) {</span>
+<span class="nc" id="L318">            params.add(BY.raw);</span>
+<span class="nc" id="L319">            params.add(sort.by());</span>
+        }
+<span class="nc bnc" id="L321" title="All 2 branches missed.">        if (!sort.limit().isEmpty()) {</span>
+<span class="nc" id="L322">            params.add(LIMIT.raw);</span>
+<span class="nc" id="L323">            params.addAll(sort.limit());</span>
+        }
+<span class="nc bnc" id="L325" title="All 2 branches missed.">        if (!sort.get().isEmpty()) {</span>
+<span class="nc" id="L326">            params.addAll(sort.get());</span>
+        }
+<span class="nc bnc" id="L328" title="All 2 branches missed.">        if (sort.order() != null) {</span>
+<span class="nc" id="L329">            params.add(sort.order());</span>
+        }
+<span class="nc bnc" id="L331" title="All 2 branches missed.">        if (sort.getAlpha() != null) {</span>
+<span class="nc" id="L332">            params.add(sort.getAlpha());</span>
+        }
+<span class="nc bnc" id="L334" title="All 2 branches missed.">        if (dst != null) {</span>
+<span class="nc" id="L335">            params.add(STORE.raw);</span>
+<span class="nc" id="L336">            params.add(dst);</span>
+        }
+<span class="nc" id="L338">        return encode(channel.alloc(), cmd.raw, params);</span>
+    }
+
+    private ByteBuf encodeZSetOpParams(RedisCommand cmd, byte[] dst, ZSetOpParams params) {
+<span class="nc" id="L342">        byte[][] p = new byte[2 + params.keys().size() + params.weights().size()</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">                + (params.aggregate() != null ? 1 : 0)][];</span>
+<span class="nc" id="L344">        p[0] = dst;</span>
+<span class="nc" id="L345">        p[1] = toBytes(params.keys().size());</span>
+<span class="nc" id="L346">        int i = 2;</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">        for (byte[] key: params.keys()) {</span>
+<span class="nc" id="L348">            p[i++] = key;</span>
+<span class="nc" id="L349">        }</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">        for (byte[] weight: params.weights()) {</span>
+<span class="nc" id="L351">            p[i++] = weight;</span>
+<span class="nc" id="L352">        }</span>
+<span class="nc bnc" id="L353" title="All 2 branches missed.">        if (params.aggregate() != null) {</span>
+<span class="nc" id="L354">            p[i] = params.aggregate().raw;</span>
+        }
+<span class="nc" id="L356">        return encode(channel.alloc(), cmd.raw, p);</span>
+    }
+
+    @Override
+    public Future&lt;Object&gt; eval(byte[] script, int numKeys, byte[]... keysvalues) {
+<span class="nc" id="L361">        return execCmd(objectConverter,</span>
+<span class="nc" id="L362">                encodeReverse(channel.alloc(), EVAL.raw, keysvalues, script, toBytes(numKeys)));</span>
+    }
+
+    @Override
+    public Future&lt;Object&gt; evalsha(byte[] sha1, int numKeys, byte[]... keysvalues) {
+<span class="nc" id="L367">        return execCmd(objectConverter,</span>
+<span class="nc" id="L368">                encodeReverse(channel.alloc(), EVALSHA.raw, keysvalues, sha1, toBytes(numKeys)));</span>
+    }
+
+    @Override
+    public EventLoop eventLoop() {
+<span class="fc" id="L373">        return channel.eventLoop();</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;Object&gt;&gt; exec() {
+<span class="nc" id="L378">        return execTxnCmd(objectListConverter, EXEC);</span>
+    }
+
+    @Override
+    public Future&lt;Object&gt; execCmd(byte[] cmd, byte[]... params) {
+<span class="nc" id="L383">        return execCmd(objectConverter, encode(channel.alloc(), cmd, params));</span>
+    }
+
+    private &lt;T&gt; Future&lt;T&gt; execCmd(PromiseConverter&lt;T&gt; converter, ByteBuf buf) {
+<span class="fc" id="L387">        Promise&lt;T&gt; promise = converter.newPromise();</span>
+<span class="fc" id="L388">        execCmd0(buf).addListener(converter.newListener(promise));</span>
+<span class="fc" id="L389">        return promise;</span>
+    }
+
+    private Future&lt;Object&gt; execCmd0(ByteBuf buf) {
+<span class="fc" id="L393">        Promise&lt;Object&gt; promise = eventLoop().newPromise();</span>
+<span class="fc" id="L394">        RedisRequest req = new RedisRequest(promise, buf);</span>
+<span class="fc" id="L395">        channel.writeAndFlush(req);</span>
+<span class="fc" id="L396">        return promise;</span>
+    }
+
+    private &lt;T&gt; Future&lt;ScanResult&lt;T&gt;&gt; execScanCmd(PromiseConverter&lt;ScanResult&lt;T&gt;&gt; converter,
+            RedisCommand cmd, byte[] key, ScanParams params) {
+<span class="nc" id="L401">        List&lt;byte[]&gt; p = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L402" title="All 2 branches missed.">        if (key != null) {</span>
+<span class="nc" id="L403">            p.add(key);</span>
+        }
+<span class="nc" id="L405">        p.add(params.cursor());</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">        if (params.match() != null) {</span>
+<span class="nc" id="L407">            p.add(MATCH.raw);</span>
+<span class="nc" id="L408">            p.add(params.match());</span>
+        }
+<span class="nc bnc" id="L410" title="All 2 branches missed.">        if (params.count() &gt; 0) {</span>
+<span class="nc" id="L411">            p.add(COUNT.raw);</span>
+<span class="nc" id="L412">            p.add(toBytes(params.count()));</span>
+        }
+<span class="nc" id="L414">        return execCmd(converter, encode(channel.alloc(), cmd.raw, p));</span>
+    }
+
+    private &lt;T&gt; Future&lt;T&gt; execTxnCmd(PromiseConverter&lt;T&gt; converter, RedisCommand cmd) {
+<span class="fc" id="L418">        Promise&lt;Object&gt; rawPromise = eventLoop().newPromise();</span>
+<span class="fc" id="L419">        channel.writeAndFlush(new TxnRedisRequest(rawPromise, cmd));</span>
+<span class="fc" id="L420">        Promise&lt;T&gt; promise = converter.newPromise();</span>
+<span class="fc" id="L421">        rawPromise.addListener(converter.newListener(promise));</span>
+<span class="fc" id="L422">        return promise;</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; exists(byte[] key) {
+<span class="nc" id="L427">        return execCmd(booleanConverter, encode(channel.alloc(), EXISTS.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; exists(byte[]... keys) {
+<span class="nc" id="L432">        return execCmd(longConverter, encode(channel.alloc(), EXISTS.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; expire(byte[] key, long seconds) {
+<span class="nc" id="L437">        return execCmd(booleanConverter, encode(channel.alloc(), EXPIRE.raw, key, toBytes(seconds)));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; expireat(byte[] key, long unixTimeSeconds) {
+<span class="nc" id="L442">        return execCmd(booleanConverter,</span>
+<span class="nc" id="L443">                encode(channel.alloc(), EXPIREAT.raw, key, toBytes(unixTimeSeconds)));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; flushall() {
+<span class="nc" id="L448">        return execCmd(voidConverter, encode(channel.alloc(), FLUSHALL.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; flushdb() {
+<span class="nc" id="L453">        return execCmd(voidConverter, encode(channel.alloc(), FLUSHDB.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; get(byte[] key) {
+<span class="fc" id="L458">        return execCmd(bytesConverter, encode(channel.alloc(), GET.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; getbit(byte[] key, long offset) {
+<span class="nc" id="L463">        return execCmd(booleanConverter, encode(channel.alloc(), GETBIT.raw, key, toBytes(offset)));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; getrange(byte[] key, long startInclusive, long endInclusive) {
+<span class="nc" id="L468">        return execCmd(</span>
+                bytesConverter,
+<span class="nc" id="L470">                encode(channel.alloc(), GETRANGE.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L471">                        toBytes(endInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; getset(byte[] key, byte[] value) {
+<span class="nc" id="L476">        return execCmd(bytesConverter, encode(channel.alloc(), GETSET.raw, key, value));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; hdel(byte[] key, byte[]... fields) {
+<span class="nc" id="L481">        return execCmd(longConverter, encodeReverse(channel.alloc(), HDEL.raw, fields, key));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; hexists(byte[] key, byte[] field) {
+<span class="nc" id="L486">        return execCmd(booleanConverter, encode(channel.alloc(), HEXISTS.raw, key, field));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; hget(byte[] key, byte[] field) {
+<span class="nc" id="L491">        return execCmd(bytesConverter, encode(channel.alloc(), HGET.raw, key, field));</span>
+    }
+
+    @Override
+    public Future&lt;Map&lt;byte[], byte[]&gt;&gt; hgetall(byte[] key) {
+<span class="nc" id="L496">        return execCmd(mapConverter, encode(channel.alloc(), HGETALL.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; hincrby(byte[] key, byte[] field, long delta) {
+<span class="nc" id="L501">        return execCmd(longConverter,</span>
+<span class="nc" id="L502">                encode(channel.alloc(), HINCRBY.raw, key, field, toBytes(delta)));</span>
+    }
+
+    @Override
+    public Future&lt;Double&gt; hincrbyfloat(byte[] key, byte[] field, double delta) {
+<span class="nc" id="L507">        return execCmd(doubleConverter,</span>
+<span class="nc" id="L508">                encode(channel.alloc(), HINCRBYFLOAT.raw, key, field, toBytes(delta)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; hkeys(byte[] key) {
+<span class="nc" id="L513">        return execCmd(listConverter, encode(channel.alloc(), HKEYS.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; hlen(byte[] key) {
+<span class="nc" id="L518">        return execCmd(longConverter, encode(channel.alloc(), HLEN.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; hmget(byte[] key, byte[]... fields) {
+<span class="nc" id="L523">        return execCmd(listConverter, encodeReverse(channel.alloc(), HMGET.raw, fields, key));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; hmset(byte[] key, Map&lt;byte[], byte[]&gt; field2Value) {
+<span class="nc" id="L528">        byte[][] params = new byte[2 * field2Value.size() + 1][];</span>
+<span class="nc" id="L529">        params[0] = key;</span>
+<span class="nc" id="L530">        int i = 1;</span>
+<span class="nc bnc" id="L531" title="All 2 branches missed.">        for (Map.Entry&lt;byte[], byte[]&gt; e: field2Value.entrySet()) {</span>
+<span class="nc" id="L532">            params[i++] = e.getKey();</span>
+<span class="nc" id="L533">            params[i++] = e.getValue();</span>
+<span class="nc" id="L534">        }</span>
+<span class="nc" id="L535">        return execCmd(voidConverter, encode(channel.alloc(), HMSET.raw, params));</span>
+    }
+
+    @Override
+    public Future&lt;ScanResult&lt;HashEntry&gt;&gt; hscan(byte[] key, ScanParams params) {
+<span class="nc" id="L540">        return execScanCmd(hashScanResultConverter, HSCAN, key, params);</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; hset(byte[] key, byte[] field, byte[] value) {
+<span class="nc" id="L545">        return execCmd(booleanConverter, encode(channel.alloc(), HSET.raw, key, field, value));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; hsetnx(byte[] key, byte[] field, byte[] value) {
+<span class="nc" id="L550">        return execCmd(booleanConverter, encode(channel.alloc(), HSETNX.raw, key, field, value));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; hvals(byte[] key) {
+<span class="nc" id="L555">        return execCmd(listConverter, encode(channel.alloc(), HVALS.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; incr(byte[] key) {
+<span class="nc" id="L560">        return execCmd(longConverter, encode(channel.alloc(), INCR.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; incrby(byte[] key, long delta) {
+<span class="nc" id="L565">        return execCmd(longConverter, encode(channel.alloc(), INCRBY.raw, key, toBytes(delta)));</span>
+    }
+
+    @Override
+    public Future&lt;Double&gt; incrbyfloat(byte[] key, double delta) {
+<span class="nc" id="L570">        return execCmd(doubleConverter,</span>
+<span class="nc" id="L571">                encode(channel.alloc(), INCRBYFLOAT.raw, key, toBytes(delta)));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; info() {
+<span class="nc" id="L576">        return execCmd(bytesConverter, encode(channel.alloc(), INFO.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; info(byte[] section) {
+<span class="nc" id="L581">        return execCmd(bytesConverter, encode(channel.alloc(), INFO.raw, section));</span>
+    }
+
+    @Override
+    public boolean isOpen() {
+<span class="fc" id="L586">        return channel.isOpen();</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; keys(byte[] pattern) {
+<span class="fc" id="L591">        return execCmd(listConverter, encode(channel.alloc(), KEYS.raw, pattern));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; lastsave() {
+<span class="nc" id="L596">        return execCmd(longConverter, encode(channel.alloc(), LASTSAVE.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; lindex(byte[] key, long index) {
+<span class="nc" id="L601">        return execCmd(bytesConverter, encode(channel.alloc(), LINDEX.raw, key, toBytes(index)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; linsert(byte[] key, LIST_POSITION where, byte[] pivot, byte[] value) {
+<span class="nc" id="L606">        return execCmd(longConverter,</span>
+<span class="nc" id="L607">                encode(channel.alloc(), LINSERT.raw, key, where.raw, pivot, value));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; llen(byte[] key) {
+<span class="nc" id="L612">        return execCmd(longConverter, encode(channel.alloc(), LLEN.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; lpop(byte[] key) {
+<span class="nc" id="L617">        return execCmd(bytesConverter, encode(channel.alloc(), LPOP.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; lpush(byte[] key, byte[]... values) {
+<span class="nc" id="L622">        return execCmd(longConverter, encodeReverse(channel.alloc(), LPUSH.raw, values, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; lpushx(byte[] key, byte[] value) {
+<span class="nc" id="L627">        return execCmd(longConverter, encode(channel.alloc(), LPUSHX.raw, key, value));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; lrange(byte[] key, long startInclusive, long stopInclusive) {
+<span class="nc" id="L632">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L634">                encode(channel.alloc(), LRANGE.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L635">                        toBytes(stopInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; lrem(byte[] key, long count, byte[] value) {
+<span class="nc" id="L640">        return execCmd(longConverter, encode(channel.alloc(), LREM.raw, key, toBytes(count), value));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; lset(byte[] key, long index, byte[] value) {
+<span class="nc" id="L645">        return execCmd(bytesConverter,</span>
+<span class="nc" id="L646">                encode(channel.alloc(), LSET.raw, key, toBytes(index), value));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; ltrim(byte[] key, long startInclusive, long stopInclusive) {
+<span class="nc" id="L651">        return execCmd(</span>
+                voidConverter,
+<span class="nc" id="L653">                encode(channel.alloc(), LTRIM.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L654">                        toBytes(stopInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; mget(byte[]... keys) {
+<span class="nc" id="L659">        return execCmd(listConverter, encode(channel.alloc(), MGET.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; migrate(byte[] host, int port, byte[] key, int dstDb, long timeoutMs) {
+<span class="nc" id="L664">        return execCmd(</span>
+                voidConverter,
+<span class="nc" id="L666">                encode(channel.alloc(), MIGRATE.raw, host, toBytes(port), key, toBytes(dstDb),</span>
+<span class="nc" id="L667">                        toBytes(timeoutMs)));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; move(byte[] key, int db) {
+<span class="nc" id="L672">        return execCmd(booleanConverter, encode(channel.alloc(), MOVE.raw, key, toBytes(db)));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; mset(byte[]... keysvalues) {
+<span class="nc" id="L677">        return execCmd(voidConverter, encode(channel.alloc(), MSET.raw, keysvalues));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; msetnx(byte[]... keysvalues) {
+<span class="nc" id="L682">        return execCmd(booleanConverter, encode(channel.alloc(), MSETNX.raw, keysvalues));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; multi() {
+<span class="fc" id="L687">        return execTxnCmd(voidConverter, MULTI);</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; persist(byte[] key) {
+<span class="nc" id="L692">        return execCmd(booleanConverter, encode(channel.alloc(), PERSIST.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; pexpire(byte[] key, long millis) {
+<span class="nc" id="L697">        return execCmd(booleanConverter, encode(channel.alloc(), PEXPIRE.raw, toBytes(millis)));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; pexpireat(byte[] key, long unixTimeMs) {
+<span class="nc" id="L702">        return execCmd(booleanConverter,</span>
+<span class="nc" id="L703">                encode(channel.alloc(), PEXPIREAT.raw, toBytes(unixTimeMs)));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; pfadd(byte[] key, byte[]... elements) {
+<span class="nc" id="L708">        return execCmd(booleanConverter, encodeReverse(channel.alloc(), PFADD.raw, elements, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; pfcount(byte[]... keys) {
+<span class="nc" id="L713">        return execCmd(longConverter, encode(channel.alloc(), PFCOUNT.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; pfmerge(byte[] dst, byte[]... keys) {
+<span class="nc" id="L718">        return execCmd(voidConverter, encodeReverse(channel.alloc(), PFMERGE.raw, keys, dst));</span>
+    }
+
+    @Override
+    public Future&lt;String&gt; ping() {
+<span class="fc" id="L723">        return execCmd(stringConverter, encode(channel.alloc(), PING.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; pttl(byte[] key) {
+<span class="nc" id="L728">        return execCmd(longConverter, encode(channel.alloc(), PTTL.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; quit() {
+<span class="nc bnc" id="L733" title="All 2 branches missed.">        if (pool != null) {</span>
+<span class="nc" id="L734">            return eventLoop().newFailedFuture(</span>
+                    new OperationNotSupportedException(
+                            &quot;'quit' is not allowed on a pooled connection&quot;));
+        }
+<span class="nc" id="L738">        return quit0();</span>
+    }
+
+    Future&lt;Void&gt; quit0() {
+<span class="nc" id="L742">        return execCmd(voidConverter, encode(channel.alloc(), QUIT.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; randomkey() {
+<span class="nc" id="L747">        return execCmd(bytesConverter, encode(channel.alloc(), RANDOMKEY.raw));</span>
+    }
+
+    @Override
+    public void release() {
+<span class="pc bpc" id="L752" title="1 of 4 branches missed.">        if (pool != null &amp;&amp; pool.exclusive()) {</span>
+<span class="fc" id="L753">            pool.release(this);</span>
+        }
+<span class="fc" id="L755">    }</span>
+
+    @Override
+    public Future&lt;Void&gt; rename(byte[] key, byte[] newKey) {
+<span class="nc" id="L759">        return execCmd(voidConverter, encode(channel.alloc(), RENAME.raw, key, newKey));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; renamenx(byte[] key, byte[] newKey) {
+<span class="nc" id="L764">        return execCmd(booleanConverter, encode(channel.alloc(), RENAMENX.raw, key, newKey));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; restore(byte[] key, int ttlMs, byte[] serializedValue, boolean replace) {
+<span class="nc bnc" id="L769" title="All 2 branches missed.">        if (replace) {</span>
+<span class="nc" id="L770">            return execCmd(</span>
+                    voidConverter,
+<span class="nc" id="L772">                    encode(channel.alloc(), RESTORE.raw, key, toBytes(ttlMs), serializedValue,</span>
+                            REPLACE.raw));
+        } else {
+<span class="nc" id="L775">            return execCmd(voidConverter,</span>
+<span class="nc" id="L776">                    encode(channel.alloc(), RESTORE.raw, key, toBytes(ttlMs), serializedValue));</span>
+        }
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; role() {
+<span class="nc" id="L782">        return execCmd(listConverter, encode(channel.alloc(), ROLE.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; rpop(byte[] key) {
+<span class="nc" id="L787">        return execCmd(bytesConverter, encode(channel.alloc(), RPOP.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; rpoplpush(byte[] src, byte[] dst) {
+<span class="nc" id="L792">        return execCmd(bytesConverter, encode(channel.alloc(), RPOPLPUSH.raw, src, dst));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; rpush(byte[] key, byte[]... values) {
+<span class="nc" id="L797">        return execCmd(longConverter, encodeReverse(channel.alloc(), RPUSH.raw, values, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; rpushx(byte[] key, byte[] value) {
+<span class="nc" id="L802">        return execCmd(longConverter, encode(channel.alloc(), RPUSHX.raw, key, value));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; sadd(byte[] key, byte[]... members) {
+<span class="nc" id="L807">        return execCmd(longConverter, encodeReverse(channel.alloc(), SADD.raw, members, key));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; save(boolean save) {
+<span class="nc" id="L812">        return execCmd(voidConverter, encode(channel.alloc(), SAVE.raw));</span>
+    }
+
+    @Override
+    public Future&lt;ScanResult&lt;byte[]&gt;&gt; scan(ScanParams params) {
+<span class="nc" id="L817">        return execScanCmd(arrayScanResultConverter, SCAN, null, params);</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; scard(byte[] key) {
+<span class="nc" id="L822">        return execCmd(longConverter, encode(channel.alloc(), SCARD.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;Boolean&gt;&gt; scriptExists(byte[]... scripts) {
+<span class="nc" id="L827">        return execCmd(booleanListConverter,</span>
+<span class="nc" id="L828">                encodeReverse(channel.alloc(), SCRIPT.raw, scripts, RedisKeyword.EXISTS.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; scriptFlush() {
+<span class="nc" id="L833">        return execCmd(voidConverter, encode(channel.alloc(), SCRIPT.raw, FLUSH.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; scriptKill() {
+<span class="nc" id="L838">        return execCmd(voidConverter, encode(channel.alloc(), SCRIPT.raw, KILL.raw));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; scriptLoad(byte[] script) {
+<span class="nc" id="L843">        return execCmd(bytesConverter, encode(channel.alloc(), SCRIPT.raw, LOAD.raw, script));</span>
+    }
+
+    @Override
+    public Future&lt;Set&lt;byte[]&gt;&gt; sdiff(byte[]... keys) {
+<span class="nc" id="L848">        return execCmd(setConverter, encode(channel.alloc(), SDIFF.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; sdiffstore(byte[] dst, byte[]... keys) {
+<span class="nc" id="L853">        return execCmd(longConverter, encodeReverse(channel.alloc(), SDIFFSTORE.raw, keys, dst));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; select(int index) {
+<span class="nc bnc" id="L858" title="All 2 branches missed.">        if (pool != null) {</span>
+<span class="nc" id="L859">            return eventLoop().newFailedFuture(</span>
+                    new OperationNotSupportedException(
+                            &quot;'select' is not allowed on a pooled connection&quot;));
+        }
+<span class="nc" id="L863">        return select0(index);</span>
+    }
+
+    Future&lt;Void&gt; select0(int index) {
+<span class="fc" id="L867">        return execCmd(voidConverter, encode(channel.alloc(), SELECT.raw, toBytes(index)));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; set(byte[] key, byte[] value) {
+<span class="fc" id="L872">        return execCmd(booleanConverter, encode(channel.alloc(), SET.raw, key, value));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; set(byte[] key, byte[] value, SetParams params) {
+<span class="nc" id="L877">        List&lt;byte[]&gt; p = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L878">        p.add(key);</span>
+<span class="nc" id="L879">        p.add(value);</span>
+<span class="nc bnc" id="L880" title="All 2 branches missed.">        if (params.ex() &gt; 0) {</span>
+<span class="nc" id="L881">            p.add(EX.raw);</span>
+<span class="nc" id="L882">            p.add(toBytes(params.ex()));</span>
+<span class="nc bnc" id="L883" title="All 2 branches missed.">        } else if (params.px() &gt; 0) {</span>
+<span class="nc" id="L884">            p.add(PX.raw);</span>
+<span class="nc" id="L885">            p.add(toBytes(params.px()));</span>
+        }
+<span class="nc bnc" id="L887" title="All 2 branches missed.">        if (params.nx()) {</span>
+<span class="nc" id="L888">            p.add(NX.raw);</span>
+<span class="nc bnc" id="L889" title="All 2 branches missed.">        } else if (params.xx()) {</span>
+<span class="nc" id="L890">            p.add(XX.raw);</span>
+        }
+<span class="nc" id="L892">        return execCmd(booleanConverter, encode(channel.alloc(), SET.raw, p));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; setbit(byte[] key, long offset, boolean bit) {
+<span class="nc" id="L897">        return execCmd(booleanConverter,</span>
+<span class="nc" id="L898">                encode(channel.alloc(), SETBIT.raw, key, toBytes(offset), toBytes(bit)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; setrange(byte[] key, long offset, byte[] value) {
+<span class="nc" id="L903">        return execCmd(longConverter,</span>
+<span class="nc" id="L904">                encode(channel.alloc(), SETRANGE.raw, key, toBytes(offset), value));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; setTimeout(final long timeoutMs) {
+<span class="fc" id="L909">        return eventLoop().submit(new Callable&lt;Long&gt;() {</span>
+
+            @Override
+            public Long call() {
+<span class="fc" id="L913">                RedisDuplexHandler handler = channel.pipeline().get(RedisDuplexHandler.class);</span>
+<span class="pc bpc" id="L914" title="1 of 2 branches missed.">                if (handler == null) {</span>
+<span class="nc" id="L915">                    return null;</span>
+                }
+<span class="fc" id="L917">                long previousTimeoutMs = TimeUnit.NANOSECONDS.toMillis(handler.getTimeoutNs());</span>
+<span class="fc" id="L918">                handler.setTimeoutNs(TimeUnit.MILLISECONDS.toNanos(timeoutMs));</span>
+<span class="fc" id="L919">                return previousTimeoutMs;</span>
+            }
+
+        });
+    }
+
+    @Override
+    public Future&lt;Set&lt;byte[]&gt;&gt; sinter(byte[]... keys) {
+<span class="nc" id="L927">        return execCmd(setConverter, encode(channel.alloc(), SINTER.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; sinterstore(byte[] dst, byte[]... keys) {
+<span class="nc" id="L932">        return execCmd(longConverter, encodeReverse(channel.alloc(), SINTERSTORE.raw, keys, dst));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; sismember(byte[] key, byte[] member) {
+<span class="nc" id="L937">        return execCmd(booleanConverter, encode(channel.alloc(), SISMEMBER.raw, key, member));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; slaveof(String host, int port) {
+<span class="nc" id="L942">        return execCmd(voidConverter,</span>
+<span class="nc" id="L943">                encode(channel.alloc(), SLAVEOF.raw, toBytes(host), toBytes(port)));</span>
+    }
+
+    @Override
+    public Future&lt;Set&lt;byte[]&gt;&gt; smembers(byte[] key) {
+<span class="nc" id="L948">        return execCmd(setConverter, encode(channel.alloc(), SMEMBERS.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Boolean&gt; smove(byte[] src, byte[] dst, byte[] member) {
+<span class="nc" id="L953">        return execCmd(booleanConverter, encode(channel.alloc(), SMOVE.raw, src, dst, member));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; sort(byte[] key) {
+<span class="nc" id="L958">        return execCmd(listConverter, encode(channel.alloc(), SORT.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; sort(byte[] key, byte[] dst) {
+<span class="nc" id="L963">        return execCmd(longConverter, encode(channel.alloc(), SORT.raw, key, STORE.raw, dst));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; sort(byte[] key, SortParams params) {
+<span class="nc" id="L968">        return execCmd(listConverter, encodeSortParams(SORT, key, params, null));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; sort(byte[] key, SortParams params, byte[] dst) {
+<span class="nc" id="L973">        return execCmd(longConverter, encodeSortParams(SORT, key, params, dst));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; spop(byte[] key) {
+<span class="nc" id="L978">        return execCmd(bytesConverter, encode(channel.alloc(), SPOP.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;byte[]&gt; srandmember(byte[] key) {
+<span class="nc" id="L983">        return execCmd(bytesConverter, encode(channel.alloc(), SRANDMEMBER.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Set&lt;byte[]&gt;&gt; srandmember(byte[] key, long count) {
+<span class="nc" id="L988">        return execCmd(setConverter, encode(channel.alloc(), SRANDMEMBER.raw, key, toBytes(count)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; srem(byte[] key, byte[]... members) {
+<span class="nc" id="L993">        return execCmd(longConverter, encodeReverse(channel.alloc(), SREM.raw, members, key));</span>
+    }
+
+    @Override
+    public Future&lt;ScanResult&lt;byte[]&gt;&gt; sscan(byte[] key, ScanParams params) {
+<span class="nc" id="L998">        return execScanCmd(arrayScanResultConverter, SSCAN, key, params);</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; strlen(byte[] key) {
+<span class="nc" id="L1003">        return execCmd(longConverter, encode(channel.alloc(), STRLEN.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Set&lt;byte[]&gt;&gt; sunion(byte[]... keys) {
+<span class="nc" id="L1008">        return execCmd(setConverter, encode(channel.alloc(), SUNION.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; sunionstore(byte[] dst, byte[]... keys) {
+<span class="nc" id="L1013">        return execCmd(longConverter, encodeReverse(channel.alloc(), SUNIONSTORE.raw, keys, dst));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; sync() {
+<span class="nc" id="L1018">        return execCmd(voidConverter, encode(channel.alloc(), SYNC.raw));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; time() {
+<span class="nc" id="L1023">        return execCmd(listConverter, encode(channel.alloc(), TIME.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; ttl(byte[] key) {
+<span class="nc" id="L1028">        return execCmd(longConverter, encode(channel.alloc(), TTL.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;String&gt; type(byte[] key) {
+<span class="nc" id="L1033">        return execCmd(stringConverter, encode(channel.alloc(), TYPE.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; unwatch() {
+<span class="nc" id="L1038">        return execCmd(voidConverter, encode(channel.alloc(), UNWATCH.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; watch(byte[]... keys) {
+<span class="nc" id="L1043">        return execCmd(voidConverter, encode(channel.alloc(), WATCH.raw, keys));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zadd(byte[] key, double score, byte[] member) {
+<span class="nc" id="L1048">        return execCmd(longConverter,</span>
+<span class="nc" id="L1049">                encode(channel.alloc(), ZADD.raw, key, toBytes(score), member));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zadd(byte[] key, Map&lt;byte[], Double&gt; member2Score) {
+<span class="nc" id="L1054">        byte[][] params = new byte[member2Score.size() * 2 + 1][];</span>
+<span class="nc" id="L1055">        params[0] = key;</span>
+<span class="nc" id="L1056">        int i = 1;</span>
+<span class="nc bnc" id="L1057" title="All 2 branches missed.">        for (Map.Entry&lt;byte[], Double&gt; e: member2Score.entrySet()) {</span>
+<span class="nc" id="L1058">            params[i++] = toBytes(e.getValue().doubleValue());</span>
+<span class="nc" id="L1059">            params[i++] = e.getKey();</span>
+<span class="nc" id="L1060">        }</span>
+<span class="nc" id="L1061">        return execCmd(longConverter, encode(channel.alloc(), ZADD.raw, params));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zcard(byte[] key) {
+<span class="nc" id="L1066">        return execCmd(longConverter, encode(channel.alloc(), ZCARD.raw, key));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zcount(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1071">        return execCmd(longConverter, encode(channel.alloc(), ZCOUNT.raw, key, min, max));</span>
+    }
+
+    @Override
+    public Future&lt;Double&gt; zincrby(byte[] key, double delta, byte[] member) {
+<span class="nc" id="L1076">        return execCmd(doubleConverter,</span>
+<span class="nc" id="L1077">                encode(channel.alloc(), ZINCRBY.raw, key, toBytes(delta), member));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zinterstore(byte[] dst, byte[]... keys) {
+<span class="nc" id="L1082">        return execCmd(longConverter, encodeReverse(channel.alloc(), ZINTERSTORE.raw, keys, dst));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zinterstore(byte[] dst, ZSetOpParams params) {
+<span class="nc" id="L1087">        return execCmd(longConverter, encodeZSetOpParams(ZINTERSTORE, dst, params));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zlexcount(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1092">        return execCmd(longConverter, encode(channel.alloc(), ZLEXCOUNT.raw, key, min, max));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrange(byte[] key, long startInclusive, long stopInclusive) {
+<span class="nc" id="L1097">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L1099">                encode(channel.alloc(), ZRANGE.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L1100">                        toBytes(stopInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrangebylex(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1105">        return execCmd(listConverter, encode(channel.alloc(), ZRANGEBYLEX.raw, key, min, max));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrangebylex(byte[] key, byte[] min, byte[] max, long offset,
+            long count) {
+<span class="nc" id="L1111">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L1113">                encode(channel.alloc(), ZRANGEBYLEX.raw, key, min, max, LIMIT.raw, toBytes(offset),</span>
+<span class="nc" id="L1114">                        toBytes(count)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrangebyscore(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1119">        return execCmd(listConverter, encode(channel.alloc(), ZRANGEBYSCORE.raw, key, min, max));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrangebyscore(byte[] key, byte[] min, byte[] max, long offset,
+            long count) {
+<span class="nc" id="L1125">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L1127">                encode(channel.alloc(), ZRANGEBYSCORE.raw, key, min, max, LIMIT.raw,</span>
+<span class="nc" id="L1128">                        toBytes(offset), toBytes(count)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;SortedSetEntry&gt;&gt; zrangebyscoreWithScores(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1133">        return execCmd(sortedSetEntryListConverter,</span>
+<span class="nc" id="L1134">                encode(channel.alloc(), ZRANGEBYSCORE.raw, key, min, max, WITHSCORES.raw));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;SortedSetEntry&gt;&gt; zrangebyscoreWithScores(byte[] key, byte[] min, byte[] max,
+            long offset, long count) {
+<span class="nc" id="L1140">        return execCmd(</span>
+                sortedSetEntryListConverter,
+<span class="nc" id="L1142">                encode(channel.alloc(), ZRANGEBYSCORE.raw, key, min, max, WITHSCORES.raw,</span>
+<span class="nc" id="L1143">                        LIMIT.raw, toBytes(offset), toBytes(count)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;SortedSetEntry&gt;&gt; zrangeWithScores(byte[] key, long startInclusive,
+            long stopInclusive) {
+<span class="nc" id="L1149">        return execCmd(</span>
+                sortedSetEntryListConverter,
+<span class="nc" id="L1151">                encode(channel.alloc(), ZRANGE.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L1152">                        toBytes(stopInclusive), WITHSCORES.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zrank(byte[] key, byte[] member) {
+<span class="nc" id="L1157">        return execCmd(longConverter, encode(channel.alloc(), ZRANK.raw, key, member));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zrem(byte[] key, byte[]... members) {
+<span class="nc" id="L1162">        return execCmd(longConverter,</span>
+<span class="nc" id="L1163">                encode(channel.alloc(), ZREM.raw, toParamsReverse(members, key)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zremrangebylex(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1168">        return execCmd(longConverter, encode(channel.alloc(), ZREMRANGEBYLEX.raw, key, min, max));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zremrangebyrank(byte[] key, long startInclusive, long stopInclusive) {
+<span class="nc" id="L1173">        return execCmd(</span>
+                longConverter,
+<span class="nc" id="L1175">                encode(channel.alloc(), ZREMRANGEBYRANK.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L1176">                        toBytes(stopInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zremrangebyscore(byte[] key, byte[] min, byte[] max) {
+<span class="nc" id="L1181">        return execCmd(longConverter, encode(channel.alloc(), ZREMRANGEBYSCORE.raw, key, min, max));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrevrange(byte[] key, long startInclusive, long stopInclusive) {
+<span class="nc" id="L1186">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L1188">                encode(channel.alloc(), ZREVRANGE.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L1189">                        toBytes(stopInclusive)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrevrangebylex(byte[] key, byte[] max, byte[] min) {
+<span class="nc" id="L1194">        return execCmd(listConverter, encode(channel.alloc(), ZREVRANGEBYLEX.raw, key, max, min));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrevrangebylex(byte[] key, byte[] max, byte[] min, long offset,
+            long count) {
+<span class="nc" id="L1200">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L1202">                encode(channel.alloc(), ZREVRANGEBYLEX.raw, key, max, min, LIMIT.raw,</span>
+<span class="nc" id="L1203">                        toBytes(offset), toBytes(count)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrevrangebyscore(byte[] key, byte[] max, byte[] min) {
+<span class="nc" id="L1208">        return execCmd(listConverter, encode(channel.alloc(), ZREVRANGEBYSCORE.raw, key, max, min));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;byte[]&gt;&gt; zrevrangebyscore(byte[] key, byte[] max, byte[] min, long offset,
+            long count) {
+<span class="nc" id="L1214">        return execCmd(</span>
+                listConverter,
+<span class="nc" id="L1216">                encode(channel.alloc(), ZREVRANGEBYSCORE.raw, key, max, min, LIMIT.raw,</span>
+<span class="nc" id="L1217">                        toBytes(offset), toBytes(count)));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;SortedSetEntry&gt;&gt; zrevrangebyscoreWithScores(byte[] key, byte[] max,
+            byte[] min) {
+<span class="nc" id="L1223">        return execCmd(sortedSetEntryListConverter,</span>
+<span class="nc" id="L1224">                encode(channel.alloc(), ZREVRANGEBYSCORE.raw, key, max, min, WITHSCORES.raw));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;SortedSetEntry&gt;&gt; zrevrangebyscoreWithScores(byte[] key, byte[] max,
+            byte[] min, long offset, long count) {
+<span class="nc" id="L1230">        return execCmd(</span>
+                sortedSetEntryListConverter,
+<span class="nc" id="L1232">                encode(channel.alloc(), ZREVRANGEBYSCORE.raw, key, max, min, WITHSCORES.raw,</span>
+<span class="nc" id="L1233">                        LIMIT.raw, toBytes(offset), toBytes(count), WITHSCORES.raw));</span>
+    }
+
+    @Override
+    public Future&lt;List&lt;SortedSetEntry&gt;&gt; zrevrangeWithScores(byte[] key, long startInclusive,
+            long stopInclusive) {
+<span class="nc" id="L1239">        return execCmd(</span>
+                sortedSetEntryListConverter,
+<span class="nc" id="L1241">                encode(channel.alloc(), ZREVRANGE.raw, key, toBytes(startInclusive),</span>
+<span class="nc" id="L1242">                        toBytes(stopInclusive), WITHSCORES.raw));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zrevrank(byte[] key, byte[] member) {
+<span class="nc" id="L1247">        return execCmd(longConverter, encode(channel.alloc(), ZREVRANK.raw, key, member));</span>
+    }
+
+    @Override
+    public Future&lt;ScanResult&lt;SortedSetEntry&gt;&gt; zscan(byte[] key, ScanParams params) {
+<span class="nc" id="L1252">        return execScanCmd(sortedSetScanResultConverter, ZSCAN, key, params);</span>
+    }
+
+    @Override
+    public Future&lt;Double&gt; zscore(byte[] key, byte[] member) {
+<span class="nc" id="L1257">        return execCmd(doubleConverter, encode(channel.alloc(), ZSCORE.raw, key, member));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zunionstore(byte[] dst, byte[]... keys) {
+<span class="nc" id="L1262">        return execCmd(longConverter, encodeReverse(channel.alloc(), ZUNIONSTORE.raw, keys, dst));</span>
+    }
+
+    @Override
+    public Future&lt;Long&gt; zunionstore(byte[] dst, ZSetOpParams params) {
+<span class="nc" id="L1267">        return execCmd(longConverter, encodeZSetOpParams(ZUNIONSTORE, dst, params));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

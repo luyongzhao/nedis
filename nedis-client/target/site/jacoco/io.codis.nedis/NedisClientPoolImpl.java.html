@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>NedisClientPoolImpl.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis</a> &gt; <span class="el_source">NedisClientPoolImpl.java</span></div><h1>NedisClientPoolImpl.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis;
+
+import io.codis.nedis.util.NedisClientHashSet;
+import io.netty.channel.Channel;
+import io.netty.channel.EventLoopGroup;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.FutureListener;
+import io.netty.util.concurrent.Promise;
+
+import static io.codis.nedis.util.NedisUtils.getEventExecutor;
+
+import java.net.SocketAddress;
+import java.util.ArrayList;
+
+/**
+ * @author Apache9
+ */
+public class NedisClientPoolImpl implements NedisClientPool {
+
+    private final EventLoopGroup group;
+
+    private final Class&lt;? extends Channel&gt; channelClass;
+
+    private final long timeoutMs;
+
+    private final SocketAddress remoteAddress;
+
+    private final byte[] password;
+
+    private final int database;
+
+    private final byte[] clientName;
+
+    private final int maxPooledConns;
+
+    private final boolean exclusive;
+
+    private final NedisClientHashSet pool;
+
+    private final Promise&lt;Void&gt; closePromise;
+
+    private int numConns;
+
+<span class="fc" id="L59">    private boolean closed = false;</span>
+
+    public NedisClientPoolImpl(EventLoopGroup group, Class&lt;? extends Channel&gt; channelClass,
+            long timeoutMs, SocketAddress remoteAddress, byte[] password, int database,
+<span class="fc" id="L63">            byte[] clientName, int maxPooledConns, boolean exclusive) {</span>
+<span class="fc" id="L64">        this.group = group;</span>
+<span class="fc" id="L65">        this.channelClass = channelClass;</span>
+<span class="fc" id="L66">        this.timeoutMs = timeoutMs;</span>
+<span class="fc" id="L67">        this.remoteAddress = remoteAddress;</span>
+<span class="fc" id="L68">        this.password = password;</span>
+<span class="fc" id="L69">        this.database = database;</span>
+<span class="fc" id="L70">        this.clientName = clientName;</span>
+<span class="fc" id="L71">        this.maxPooledConns = maxPooledConns;</span>
+<span class="fc" id="L72">        this.exclusive = exclusive;</span>
+<span class="fc" id="L73">        this.pool = new NedisClientHashSet(maxPooledConns);</span>
+<span class="fc" id="L74">        this.closePromise = group.next().newPromise();</span>
+<span class="fc" id="L75">    }</span>
+
+    private final class InitializeFutureListener implements FutureListener&lt;Void&gt; {
+
+        private final Promise&lt;NedisClient&gt; promise;
+
+        private final NedisClientImpl client;
+
+        private final State nextState;
+
+        public InitializeFutureListener(Promise&lt;NedisClient&gt; promise, NedisClientImpl client,
+<span class="fc" id="L86">                State nextState) {</span>
+<span class="fc" id="L87">            this.promise = promise;</span>
+<span class="fc" id="L88">            this.client = client;</span>
+<span class="fc" id="L89">            this.nextState = nextState;</span>
+<span class="fc" id="L90">        }</span>
+
+        @Override
+        public void operationComplete(Future&lt;Void&gt; future) throws Exception {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">            if (future.isSuccess()) {</span>
+<span class="fc" id="L95">                initialize(promise, client, nextState);</span>
+            } else {
+<span class="fc" id="L97">                promise.tryFailure(future.cause());</span>
+<span class="fc" id="L98">                client.close();</span>
+            }
+<span class="fc" id="L100">        }</span>
+
+    }
+
+<span class="pc" id="L104">    private enum State {</span>
+<span class="fc" id="L105">        AUTH, SELECT, CLIENT_SETNAME, FINISH</span>
+    }
+
+    private void initialize(final Promise&lt;NedisClient&gt; promise, final NedisClientImpl client,
+            State state) {
+<span class="pc bpc" id="L110" title="2 of 5 branches missed.">        switch (state) {</span>
+            case AUTH:
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">                if (password == null) {</span>
+<span class="fc" id="L113">                    initialize(promise, client, State.SELECT);</span>
+                } else {
+<span class="nc" id="L115">                    client.auth0(password).addListener(</span>
+                            new InitializeFutureListener(promise, client, State.SELECT));
+                }
+<span class="nc" id="L118">                break;</span>
+            case SELECT:
+<span class="fc bfc" id="L120" title="All 2 branches covered.">                if (database == 0) {</span>
+<span class="fc" id="L121">                    initialize(promise, client, State.CLIENT_SETNAME);</span>
+                } else {
+<span class="fc" id="L123">                    client.select0(database).addListener(</span>
+                            new InitializeFutureListener(promise, client, State.CLIENT_SETNAME));
+                }
+<span class="fc" id="L126">                break;</span>
+            case CLIENT_SETNAME:
+<span class="fc bfc" id="L128" title="All 2 branches covered.">                if (clientName == null) {</span>
+<span class="fc" id="L129">                    promise.trySuccess(client);</span>
+                } else {
+<span class="fc" id="L131">                    client.clientSetname0(clientName).addListener(</span>
+                            new InitializeFutureListener(promise, client, State.FINISH));
+                }
+<span class="fc" id="L134">                break;</span>
+            case FINISH:
+<span class="nc" id="L136">                promise.trySuccess(client);</span>
+                break;
+        }
+<span class="fc" id="L139">    }</span>
+
+    private Future&lt;NedisClient&gt; newClient() {
+<span class="fc" id="L142">        Future&lt;NedisClientImpl&gt; f = NedisClientBuilder.create().group(group).channel(channelClass)</span>
+<span class="fc" id="L143">                .timeoutMs(timeoutMs).belongTo(this).connect(remoteAddress);</span>
+
+<span class="fc" id="L145">        final Promise&lt;NedisClient&gt; promise = getEventExecutor(f).newPromise();</span>
+<span class="fc" id="L146">        f.addListener(new FutureListener&lt;NedisClientImpl&gt;() {</span>
+
+            @Override
+            public void operationComplete(Future&lt;NedisClientImpl&gt; future) throws Exception {
+<span class="pc bpc" id="L150" title="1 of 2 branches missed.">                if (future.isSuccess()) {</span>
+<span class="fc" id="L151">                    initialize(promise, future.getNow(), State.AUTH);</span>
+                } else {
+<span class="nc" id="L153">                    promise.tryFailure(future.cause());</span>
+                }
+<span class="fc" id="L155">            }</span>
+
+        });
+<span class="fc" id="L158">        return promise;</span>
+    }
+
+<span class="fc" id="L161">    private final FutureListener&lt;NedisClient&gt; acquireFutureListener = new FutureListener&lt;NedisClient&gt;() {</span>
+
+        @Override
+        public void operationComplete(Future&lt;NedisClient&gt; future) throws Exception {
+<span class="fc" id="L165">            synchronized (pool) {</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">                if (future.isSuccess()) {</span>
+<span class="fc" id="L167">                    final NedisClient client = future.getNow();</span>
+<span class="fc" id="L168">                    client.closeFuture().addListener(new FutureListener&lt;Void&gt;() {</span>
+
+                        @Override
+                        public void operationComplete(Future&lt;Void&gt; future) throws Exception {
+<span class="fc" id="L172">                            synchronized (pool) {</span>
+<span class="fc" id="L173">                                pool.remove(client);</span>
+<span class="fc" id="L174">                                numConns--;</span>
+<span class="pc bpc" id="L175" title="1 of 4 branches missed.">                                if (closed &amp;&amp; numConns == 0) {</span>
+<span class="fc" id="L176">                                    closePromise.trySuccess(null);</span>
+                                }
+<span class="pc" id="L178">                            }</span>
+<span class="fc" id="L179">                        }</span>
+
+                    });
+<span class="fc bfc" id="L182" title="All 2 branches covered.">                    if (!exclusive) {</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">                        if (closed) {</span>
+<span class="nc" id="L184">                            client.close();</span>
+                        } else {
+<span class="fc" id="L186">                            pool.add(client);</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">                            if (!pendingAcquireList.isEmpty()) {</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">                                for (Promise&lt;NedisClient&gt; promise: pendingAcquireList) {</span>
+<span class="fc" id="L189">                                    promise.trySuccess(client);</span>
+<span class="fc" id="L190">                                }</span>
+<span class="fc" id="L191">                                pendingAcquireList.clear();</span>
+                                // usually we do not need this any more, so trim its size.
+<span class="fc" id="L193">                                pendingAcquireList.trimToSize();</span>
+                            }
+                        }
+                    }
+<span class="fc" id="L197">                } else {</span>
+<span class="fc" id="L198">                    numConns--;</span>
+<span class="pc bpc" id="L199" title="1 of 4 branches missed.">                    if (!exclusive &amp;&amp; numConns == 0) {</span>
+                        // notify all pending promises that we could not get a connection.
+<span class="pc bpc" id="L201" title="1 of 2 branches missed.">                        for (Promise&lt;NedisClient&gt; promise: pendingAcquireList) {</span>
+<span class="nc" id="L202">                            promise.tryFailure(future.cause());</span>
+<span class="nc" id="L203">                        }</span>
+<span class="fc" id="L204">                        pendingAcquireList.clear();</span>
+                    }
+                }
+<span class="pc" id="L207">            }</span>
+<span class="fc" id="L208">        }</span>
+    };
+
+<span class="fc" id="L211">    private final ArrayList&lt;Promise&lt;NedisClient&gt;&gt; pendingAcquireList = new ArrayList&lt;&gt;();</span>
+
+    @Override
+    public Future&lt;NedisClient&gt; acquire() {
+<span class="fc" id="L215">        synchronized (pool) {</span>
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">            if (closed) {</span>
+<span class="nc" id="L217">                return group.next().&lt;NedisClient&gt;newFailedFuture(</span>
+                        new IllegalStateException(&quot;already closed&quot;));
+            }
+<span class="fc bfc" id="L220" title="All 2 branches covered.">            if (numConns &lt; maxPooledConns) {</span>
+<span class="fc" id="L221">                numConns++;</span>
+<span class="fc" id="L222">                return newClient().addListener(acquireFutureListener);</span>
+            }
+<span class="fc bfc" id="L224" title="All 2 branches covered.">            if (!pool.isEmpty()) {</span>
+<span class="fc" id="L225">                NedisClient client = pool.head(exclusive);</span>
+<span class="fc" id="L226">                return client.eventLoop().newSucceededFuture(client);</span>
+            }
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">            if (exclusive) {</span>
+<span class="nc" id="L229">                numConns++;</span>
+<span class="nc" id="L230">                return newClient().addListener(acquireFutureListener);</span>
+            } else {
+                // If connection is shared, then we should not create more connections than
+                // maxPooledConns. So here we add a promise to pending queue. The promise will be
+                // notified when there are connections in pool.
+<span class="fc" id="L235">                Promise&lt;NedisClient&gt; promise = group.next().newPromise();</span>
+<span class="fc" id="L236">                pendingAcquireList.add(promise);</span>
+<span class="fc" id="L237">                return promise;</span>
+            }
+<span class="nc" id="L239">        }</span>
+    }
+
+    private void tryPooling(NedisClient client) {
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">        if (closed) {</span>
+<span class="nc" id="L244">            client.close();</span>
+<span class="nc" id="L245">            return;</span>
+        }
+<span class="pc bpc" id="L247" title="1 of 2 branches missed.">        if (pool.contains(client)) {</span>
+<span class="nc" id="L248">            return;</span>
+        }
+<span class="pc bpc" id="L250" title="1 of 2 branches missed.">        if (pool.size() &lt; maxPooledConns) {</span>
+<span class="fc" id="L251">            pool.add(client);</span>
+        } else {
+<span class="nc" id="L253">            client.close();</span>
+        }
+<span class="fc" id="L255">    }</span>
+
+    @Override
+    public void release(NedisClient client) {
+<span class="fc" id="L259">        synchronized (pool) {</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">            if (client.isOpen()) {</span>
+<span class="fc" id="L261">                tryPooling(client);</span>
+            }
+<span class="pc" id="L263">        }</span>
+<span class="fc" id="L264">    }</span>
+
+    @Override
+    public Future&lt;Void&gt; close() {
+        NedisClient[] toClose;
+<span class="fc" id="L269">        synchronized (pool) {</span>
+<span class="fc bfc" id="L270" title="All 2 branches covered.">            if (closed) {</span>
+<span class="fc" id="L271">                return closePromise;</span>
+            }
+<span class="fc" id="L273">            closed = true;</span>
+<span class="fc bfc" id="L274" title="All 2 branches covered.">            if (numConns == 0) {</span>
+<span class="fc" id="L275">                closePromise.trySuccess(null);</span>
+<span class="fc" id="L276">                return closePromise;</span>
+            }
+<span class="fc" id="L278">            toClose = pool.toArray();</span>
+<span class="pc" id="L279">        }</span>
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        for (NedisClient client: toClose) {</span>
+<span class="fc" id="L281">            client.close();</span>
+        }
+<span class="fc" id="L283">        return closePromise;</span>
+    }
+
+    @Override
+    public Future&lt;Void&gt; closeFuture() {
+<span class="nc" id="L288">        return closePromise;</span>
+    }
+
+    @Override
+    public boolean exclusive() {
+<span class="fc" id="L293">        return exclusive;</span>
+    }
+
+    @Override
+    public int numConns() {
+<span class="fc" id="L298">        synchronized (pool) {</span>
+<span class="fc" id="L299">            return numConns;</span>
+<span class="nc" id="L300">        }</span>
+    }
+
+    @Override
+    public int numPooledConns() {
+<span class="fc" id="L305">        synchronized (pool) {</span>
+<span class="fc" id="L306">            return pool.size();</span>
+<span class="nc" id="L307">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

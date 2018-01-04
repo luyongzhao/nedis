@@ -1,0 +1,3 @@
+io.codis.nedis.util.NedisUtils$Invoker@5e3d57c7
+bar499999
+8752

@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PromiseConverter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">nedis-client</a> &gt; <a href="index.source.html" class="el_package">io.codis.nedis</a> &gt; <span class="el_source">PromiseConverter.java</span></div><h1>PromiseConverter.java</h1><pre class="source lang-java linenums">/**
+ * Copyright (c) 2015 CodisLabs.
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.codis.nedis;
+
+import io.codis.nedis.exception.RedisResponseException;
+import io.codis.nedis.handler.RedisResponseDecoder;
+import io.codis.nedis.protocol.HashEntry;
+import io.codis.nedis.protocol.ScanResult;
+import io.codis.nedis.protocol.SortedSetEntry;
+import io.netty.util.concurrent.EventExecutor;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.FutureListener;
+import io.netty.util.concurrent.Promise;
+
+import static io.codis.nedis.util.NedisUtils.bytesToDouble;
+import static io.codis.nedis.util.NedisUtils.newBytesKeyMap;
+import static io.codis.nedis.util.NedisUtils.newBytesSet;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Convert redis response to give type.
+ * 
+ * @author Apache9
+ */
+abstract class PromiseConverter&lt;T&gt; {
+
+    private final EventExecutor executor;
+
+<span class="fc" id="L47">    public PromiseConverter(EventExecutor executor) {</span>
+<span class="fc" id="L48">        this.executor = executor;</span>
+<span class="fc" id="L49">    }</span>
+
+    public abstract FutureListener&lt;Object&gt; newListener(Promise&lt;T&gt; promise);
+
+    public Promise&lt;T&gt; newPromise() {
+<span class="fc" id="L54">        return executor.newPromise();</span>
+    }
+
+    public static PromiseConverter&lt;List&lt;byte[]&gt;&gt; toList(EventExecutor executor) {
+<span class="fc" id="L58">        return new PromiseConverter&lt;List&lt;byte[]&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;List&lt;byte[]&gt;&gt; promise) {
+<span class="fc" id="L62">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @SuppressWarnings(&quot;unchecked&quot;)
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="fc" id="L68">                            Object resp = future.getNow();</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="fc" id="L70">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L72">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="nc" id="L74">                                promise.trySuccess((List&lt;byte[]&gt;) resp);</span>
+                            }
+<span class="fc" id="L76">                        } else {</span>
+<span class="nc" id="L77">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="fc" id="L79">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Boolean&gt; toBoolean(EventExecutor executor) {
+<span class="fc" id="L86">        return new PromiseConverter&lt;Boolean&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Boolean&gt; promise) {
+<span class="fc" id="L90">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                        if (future.isSuccess()) {</span>
+<span class="fc" id="L95">                            Object resp = future.getNow();</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L97">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="pc bpc" id="L98" title="1 of 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L99">                                promise.trySuccess(false);</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">                            } else if (resp instanceof String) {</span>
+<span class="fc" id="L101">                                promise.trySuccess(true);</span>
+                            } else {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">                                promise.trySuccess(((Long) resp).intValue() != 0);</span>
+                            }
+<span class="fc" id="L105">                        } else {</span>
+<span class="fc" id="L106">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="fc" id="L108">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;byte[]&gt; toBytes(EventExecutor executor) {
+<span class="fc" id="L115">        return new PromiseConverter&lt;byte[]&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;byte[]&gt; promise) {
+<span class="fc" id="L119">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="fc" id="L124">                            Object resp = future.getNow();</span>
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L126">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="pc bpc" id="L127" title="1 of 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L128">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="fc" id="L130">                                promise.trySuccess((byte[]) resp);</span>
+                            }
+<span class="fc" id="L132">                        } else {</span>
+<span class="nc" id="L133">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="fc" id="L135">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Double&gt; toDouble(EventExecutor executor) {
+<span class="fc" id="L142">        return new PromiseConverter&lt;Double&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Double&gt; promise) {
+<span class="nc" id="L146">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L151">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L153">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L155">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="nc" id="L157">                                promise.trySuccess(bytesToDouble((byte[]) resp));</span>
+                            }
+<span class="nc" id="L159">                        } else {</span>
+<span class="nc" id="L160">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L162">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Long&gt; toLong(EventExecutor executor) {
+<span class="fc" id="L169">        return new PromiseConverter&lt;Long&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Long&gt; promise) {
+<span class="nc" id="L173">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L177" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L178">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L180">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L182">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="nc" id="L184">                                promise.trySuccess((Long) resp);</span>
+                            }
+<span class="nc" id="L186">                        } else {</span>
+<span class="nc" id="L187">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L189">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Object&gt; toObject(EventExecutor executor) {
+<span class="fc" id="L196">        return new PromiseConverter&lt;Object&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Object&gt; promise) {
+<span class="nc" id="L200">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L204" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L205">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L207">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L209">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="nc" id="L211">                                promise.trySuccess(resp);</span>
+                            }
+<span class="nc" id="L213">                        } else {</span>
+<span class="nc" id="L214">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L216">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;String&gt; toString(EventExecutor executor) {
+<span class="fc" id="L223">        return new PromiseConverter&lt;String&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;String&gt; promise) {
+<span class="fc" id="L227">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="fc" id="L232">                            Object resp = future.getNow();</span>
+<span class="pc bpc" id="L233" title="1 of 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L234">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="pc bpc" id="L235" title="1 of 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L236">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="fc" id="L238">                                promise.trySuccess(resp.toString());</span>
+                            }
+<span class="fc" id="L240">                        } else {</span>
+<span class="nc" id="L241">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="fc" id="L243">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Void&gt; toVoid(EventExecutor executor) {
+<span class="fc" id="L250">        return new PromiseConverter&lt;Void&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Void&gt; promise) {
+<span class="fc" id="L254">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="pc bpc" id="L258" title="1 of 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="fc" id="L259">                            Object resp = future.getNow();</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="fc" id="L261">                                promise.tryFailure((RedisResponseException) resp);</span>
+                            } else {
+<span class="fc" id="L263">                                promise.trySuccess(null);</span>
+                            }
+<span class="fc" id="L265">                        } else {</span>
+<span class="nc" id="L266">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="fc" id="L268">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;ScanResult&lt;byte[]&gt;&gt; toArrayScanResult(EventExecutor executor) {
+<span class="fc" id="L275">        return new PromiseConverter&lt;ScanResult&lt;byte[]&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;ScanResult&lt;byte[]&gt;&gt; promise) {
+<span class="nc" id="L279">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @SuppressWarnings(&quot;unchecked&quot;)
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L284" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L285">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L287">                                promise.tryFailure((RedisResponseException) resp);</span>
+                            } else {
+<span class="nc" id="L289">                                List&lt;Object&gt; list = (List&lt;Object&gt;) resp;</span>
+<span class="nc" id="L290">                                promise.trySuccess(new ScanResult&lt;byte[]&gt;((byte[]) list.get(0),</span>
+<span class="nc" id="L291">                                        (List&lt;byte[]&gt;) list.get(1)));</span>
+                            }
+<span class="nc" id="L293">                        } else {</span>
+<span class="nc" id="L294">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L296">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;ScanResult&lt;HashEntry&gt;&gt; toHashScanResult(EventExecutor executor) {
+<span class="fc" id="L303">        return new PromiseConverter&lt;ScanResult&lt;HashEntry&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;ScanResult&lt;HashEntry&gt;&gt; promise) {
+<span class="nc" id="L307">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @SuppressWarnings(&quot;unchecked&quot;)
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L312" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L313">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L315">                                promise.tryFailure((RedisResponseException) resp);</span>
+                            } else {
+<span class="nc" id="L317">                                List&lt;Object&gt; list = (List&lt;Object&gt;) resp;</span>
+<span class="nc" id="L318">                                byte[] cursor = (byte[]) list.get(0);</span>
+<span class="nc" id="L319">                                List&lt;byte[]&gt; rawValueList = (List&lt;byte[]&gt;) list.get(1);</span>
+<span class="nc" id="L320">                                List&lt;HashEntry&gt; values = new ArrayList&lt;&gt;(rawValueList.size() / 2);</span>
+<span class="nc" id="L321">                                for (Iterator&lt;byte[]&gt; iter = rawValueList.iterator(); iter</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">                                        .hasNext();) {</span>
+<span class="nc" id="L323">                                    values.add(new HashEntry(iter.next(), iter.next()));</span>
+                                }
+<span class="nc" id="L325">                                promise.trySuccess(new ScanResult&lt;HashEntry&gt;(cursor, values));</span>
+                            }
+<span class="nc" id="L327">                        } else {</span>
+<span class="nc" id="L328">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L330">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;ScanResult&lt;SortedSetEntry&gt;&gt; toSortedSetScanResult(
+            EventExecutor executor) {
+<span class="fc" id="L338">        return new PromiseConverter&lt;ScanResult&lt;SortedSetEntry&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(
+                    final Promise&lt;ScanResult&lt;SortedSetEntry&gt;&gt; promise) {
+<span class="nc" id="L343">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @SuppressWarnings(&quot;unchecked&quot;)
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L348" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L349">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L351">                                promise.tryFailure((RedisResponseException) resp);</span>
+                            } else {
+<span class="nc" id="L353">                                List&lt;Object&gt; list = (List&lt;Object&gt;) resp;</span>
+<span class="nc" id="L354">                                byte[] cursor = (byte[]) list.get(0);</span>
+<span class="nc" id="L355">                                List&lt;byte[]&gt; rawValueList = (List&lt;byte[]&gt;) list.get(1);</span>
+<span class="nc" id="L356">                                List&lt;SortedSetEntry&gt; values = new ArrayList&lt;&gt;(</span>
+<span class="nc" id="L357">                                        rawValueList.size() / 2);</span>
+<span class="nc" id="L358">                                for (Iterator&lt;byte[]&gt; iter = rawValueList.iterator(); iter</span>
+<span class="nc bnc" id="L359" title="All 2 branches missed.">                                        .hasNext();) {</span>
+<span class="nc" id="L360">                                    values.add(new SortedSetEntry(iter.next(), bytesToDouble(iter</span>
+<span class="nc" id="L361">                                            .next())));</span>
+                                }
+<span class="nc" id="L363">                                promise.trySuccess(new ScanResult&lt;SortedSetEntry&gt;(cursor, values));</span>
+                            }
+<span class="nc" id="L365">                        } else {</span>
+<span class="nc" id="L366">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L368">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Map&lt;byte[], byte[]&gt;&gt; toMap(EventExecutor executor) {
+<span class="fc" id="L375">        return new PromiseConverter&lt;Map&lt;byte[], byte[]&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Map&lt;byte[], byte[]&gt;&gt; promise) {
+<span class="nc" id="L379">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L383" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L384">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L385" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L386">                                promise.tryFailure((RedisResponseException) resp);</span>
+                            } else {
+                                @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L389">                                List&lt;byte[]&gt; rawValueList = (List&lt;byte[]&gt;) resp;</span>
+<span class="nc" id="L390">                                Map&lt;byte[], byte[]&gt; values = newBytesKeyMap();</span>
+<span class="nc" id="L391">                                for (Iterator&lt;byte[]&gt; iter = rawValueList.iterator(); iter</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">                                        .hasNext();) {</span>
+<span class="nc" id="L393">                                    values.put(iter.next(), iter.next());</span>
+                                }
+<span class="nc" id="L395">                                promise.trySuccess(values);</span>
+                            }
+<span class="nc" id="L397">                        } else {</span>
+<span class="nc" id="L398">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L400">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;Set&lt;byte[]&gt;&gt; toSet(EventExecutor executor) {
+<span class="fc" id="L407">        return new PromiseConverter&lt;Set&lt;byte[]&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;Set&lt;byte[]&gt;&gt; promise) {
+<span class="nc" id="L411">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @SuppressWarnings(&quot;unchecked&quot;)
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L416" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L417">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L418" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L419">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L420" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L421">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="nc" id="L423">                                Set&lt;byte[]&gt; values = newBytesSet();</span>
+<span class="nc" id="L424">                                values.addAll((List&lt;byte[]&gt;) resp);</span>
+<span class="nc" id="L425">                                promise.trySuccess(values);</span>
+                            }
+<span class="nc" id="L427">                        } else {</span>
+<span class="nc" id="L428">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L430">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;List&lt;SortedSetEntry&gt;&gt; toSortedSetEntryList(EventExecutor executor) {
+<span class="fc" id="L437">        return new PromiseConverter&lt;List&lt;SortedSetEntry&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;List&lt;SortedSetEntry&gt;&gt; promise) {
+<span class="nc" id="L441">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L445" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L446">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L447" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L448">                                promise.tryFailure((RedisResponseException) resp);</span>
+                            } else {
+                                @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L451">                                List&lt;byte[]&gt; rawValueList = (List&lt;byte[]&gt;) resp;</span>
+<span class="nc" id="L452">                                List&lt;SortedSetEntry&gt; values = new ArrayList&lt;&gt;(</span>
+<span class="nc" id="L453">                                        rawValueList.size() / 2);</span>
+<span class="nc" id="L454">                                for (Iterator&lt;byte[]&gt; iter = rawValueList.iterator(); iter</span>
+<span class="nc bnc" id="L455" title="All 2 branches missed.">                                        .hasNext();) {</span>
+<span class="nc" id="L456">                                    values.add(new SortedSetEntry(iter.next(), bytesToDouble(iter</span>
+<span class="nc" id="L457">                                            .next())));</span>
+                                }
+<span class="nc" id="L459">                                promise.trySuccess(values);</span>
+                            }
+<span class="nc" id="L461">                        } else {</span>
+<span class="nc" id="L462">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L464">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;List&lt;Boolean&gt;&gt; toBooleanList(EventExecutor executor) {
+<span class="fc" id="L471">        return new PromiseConverter&lt;List&lt;Boolean&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;List&lt;Boolean&gt;&gt; promise) {
+<span class="nc" id="L475">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L479" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L480">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L481" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L482">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L483" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L484">                                promise.trySuccess(null);</span>
+                            } else {
+                                @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L487">                                List&lt;Long&gt; rawValueList = (List&lt;Long&gt;) resp;</span>
+<span class="nc" id="L488">                                List&lt;Boolean&gt; values = new ArrayList&lt;&gt;(rawValueList.size());</span>
+<span class="nc bnc" id="L489" title="All 2 branches missed.">                                for (long l: rawValueList) {</span>
+<span class="nc bnc" id="L490" title="All 2 branches missed.">                                    values.add(l != 0L);</span>
+<span class="nc" id="L491">                                }</span>
+<span class="nc" id="L492">                                promise.trySuccess(values);</span>
+                            }
+<span class="nc" id="L494">                        } else {</span>
+<span class="nc" id="L495">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L497">                    }</span>
+                };
+            }
+        };
+    }
+
+    public static PromiseConverter&lt;List&lt;Object&gt;&gt; toObjectList(EventExecutor executor) {
+<span class="fc" id="L504">        return new PromiseConverter&lt;List&lt;Object&gt;&gt;(executor) {</span>
+
+            @Override
+            public FutureListener&lt;Object&gt; newListener(final Promise&lt;List&lt;Object&gt;&gt; promise) {
+<span class="nc" id="L508">                return new FutureListener&lt;Object&gt;() {</span>
+
+                    @SuppressWarnings(&quot;unchecked&quot;)
+                    @Override
+                    public void operationComplete(Future&lt;Object&gt; future) throws Exception {
+<span class="nc bnc" id="L513" title="All 2 branches missed.">                        if (future.isSuccess()) {</span>
+<span class="nc" id="L514">                            Object resp = future.getNow();</span>
+<span class="nc bnc" id="L515" title="All 2 branches missed.">                            if (resp instanceof RedisResponseException) {</span>
+<span class="nc" id="L516">                                promise.tryFailure((RedisResponseException) resp);</span>
+<span class="nc bnc" id="L517" title="All 2 branches missed.">                            } else if (resp == RedisResponseDecoder.NULL_REPLY) {</span>
+<span class="nc" id="L518">                                promise.trySuccess(null);</span>
+                            } else {
+<span class="nc" id="L520">                                promise.trySuccess((List&lt;Object&gt;) resp);</span>
+                            }
+<span class="nc" id="L522">                        } else {</span>
+<span class="nc" id="L523">                            promise.tryFailure(future.cause());</span>
+                        }
+<span class="nc" id="L525">                    }</span>
+                };
+            }
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
